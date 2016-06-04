@@ -1,0 +1,26 @@
+package cn.com.bean;
+
+public class LandWay {
+
+	private String id ; //   路径的 id
+	private String way ; //  路径的 内容
+	private String land ; // 路径的 别的信息
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
+	public String getWay() {
+		return way;
+	}
+	public void setWay(String way) {
+		this.way = way;
+	}
+	public String getLand() {
+		return land;
+	}
+	public void setLand(String land) {
+		this.land = land;
+	}
+}

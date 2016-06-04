@@ -1,0 +1,4 @@
+driverClassName=oracle.jdbc.driver.OracleDriver
+username=smwed
+password=smwed
+url=jdbc:oracle:thin:@//124.127.47.236:1521/orcl

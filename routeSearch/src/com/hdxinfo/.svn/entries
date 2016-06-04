@@ -1,0 +1,43 @@
+10
+
+dir
+920
+svn://192.168.0.123/FLOW/src/cn/com
+svn://192.168.0.123
+
+
+
+2013-01-08T09:37:38.609375Z
+874
+wch
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+e8da395e-ea7f-f545-b0aa-97e621cd074e
+
+flexjava
+dir
+
+impl
+dir
+
+inter
+dir
+
+bean
+dir
+
+dbserver
+dir
+

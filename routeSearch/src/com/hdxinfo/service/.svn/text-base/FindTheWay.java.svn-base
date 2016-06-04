@@ -1,0 +1,63 @@
+package cn.com.flexjava;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import cn.com.bean.LandWay;
+import cn.com.impl.FindTheWayImpl;
+import cn.com.inter.FindTheWayInter;
+
+public class FindTheWay {
+
+	public List<LandWay> findland(String sstaid , String estaid , String times , int findflag){
+		List<LandWay> llw = new ArrayList<LandWay>() ;
+		FindTheWayInter ftw = new FindTheWayImpl() ; 
+		llw = ftw.findTheWay(sstaid, estaid, times, findflag) ;
+		return llw ; 
+	}
+	public List<LandWay> findlandlist(String wayid){
+		List<LandWay> llw = new ArrayList<LandWay>() ;
+		FindTheWayInter ftw = new FindTheWayImpl() ; 
+		llw = ftw.findTheWaylist(wayid) ;
+		return llw ; 
+	}
+	// GIS 查询数据
+	public String findlandtheway(String s){
+		String str = "" ;
+		FindTheWayInter ftw = new FindTheWayImpl() ; 
+		str = ftw.find_id_by_land(s) ;
+		return str ;
+	}
+	// 查询所有车站信息
+	
+	public List<String> findstation(){
+		List<String> ls = new ArrayList<String>() ;
+		FindTheWayInter ftw = new FindTheWayImpl() ; 
+		ls = ftw.find_all_sta() ;
+		return ls ;
+	}
+	
+	// 有选择性的查询车站-- 起始站
+	public List<String> findstationchose(String s){
+		List<String> ls = new ArrayList<String>() ;
+		FindTheWayInter ftw = new FindTheWayImpl() ; 
+		ls = ftw.find_chose_sta(s);
+		return ls ;
+	}
+	// 有选择性的查询车站--终到站
+	public List<String> findstationchoseEsta(String s){
+		List<String> ls = new ArrayList<String>() ;
+		FindTheWayInter ftw = new FindTheWayImpl() ; 
+		ls = ftw.find_chose_sta(s);
+		return ls ;
+	}
+	
+	// length time number 
+	public List<LandWay> findThree(String str){
+		List<LandWay> llw = new ArrayList<LandWay>() ;
+		FindTheWayInter ftw = new FindTheWayImpl() ; 
+		llw = ftw.findLandThree(str) ;
+		return llw ;
+	}
+	
+}

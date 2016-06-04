@@ -1,6 +1,9 @@
 package com.hdxinfo.bean;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import edu.emory.mathcs.backport.java.util.Arrays;
 
 public class RouteBean {
 	private String routeStr;
@@ -12,9 +15,12 @@ public class RouteBean {
 	private double waitTime;
 	//存放路径满意度指数
     private double costSatisfaction;
+    private double temp=0;
     //路径满意度指数数组
-    private double[]  costSatArray = new double[24*12];
-    
+    private double[][]  costSatArray = new double[3][24*12];
+   // private List<Double> costSatArray = new ArrayList<Double>();
+  //  private List<List<Double>> costSatArray = new ArrayList<List<Double>>();
+    //private List<List<Double>> costSatArray = new ArrayList<List<Double>>();
 	
 	public RouteBean() {
 		
@@ -75,12 +81,36 @@ public class RouteBean {
 	public void setCostSatisfaction(double costSatisfaction) {
 		this.costSatisfaction = costSatisfaction;
 	}
-	
-	public double[] getCostSatArray() {
+
+	/*public double[] getCostSatArray() {
 		return costSatArray;
 	}
-	
-	public void setCostSatArray(double[][] costSat,int p) {
-		this.costSatArray = costSat[p];
+
+
+	public void setCostSatArray(double[] costSatArray) {
+		
+			
+			this.costSatArray=costSatArray;
+		
+	}*/
+	public double[][] getCostSatArray() {
+		return costSatArray;
 	}
+
+
+	public void setCostSatArray(double[][] costSatArray) {
+		
+			
+			this.costSatArray=costSatArray;
+		
+	}
+	public double getTemp() {
+		return temp;
+	}
+
+	public void setTemp(double temp) {
+		this.temp = temp;
+	}
+	
+	
 }

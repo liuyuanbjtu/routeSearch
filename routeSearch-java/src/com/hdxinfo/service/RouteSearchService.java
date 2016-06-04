@@ -136,7 +136,9 @@ public class RouteSearchService {
 					Route route = routeIt.next();
 					
 					//计算路径满意度,存放在Route类中int costStatisfaction[24*12] 
-					computecostSat(route, p, index_t);
+					route.costSatisfaction = new double[3][24*12];
+					for(int m=0;m<3;m++)
+					computecostSat(route, m, index_t);
 					
 					List<Node> nodeList = route.nodes;
 					int nLength = nodeList.size();
@@ -206,7 +208,8 @@ public class RouteSearchService {
 					route.travelTime = 0;
 					bean.setWaitTime(route.waitTime[index_t]);
 					bean.setCostSatisfaction(route.costSatisfaction[p][index_t]);
-					bean.setCostSatArray(route.costSatisfaction,p);
+//					bean.setCostSatArray(route.costSatisfaction,p);
+					bean.setCostSatArray(route.costSatisfaction);
 //					System.out.println(route.costSatisfaction[p][index_t-1]);
 					
 					list.add(bean);
@@ -221,7 +224,7 @@ public class RouteSearchService {
 			e.printStackTrace();
 		}
 		
-		String outputPath = "C:\\Users\\LiuYuan\\Workspaces\\routeSearch\\routeSearch\\Data\\output.txt";
+		/*String outputPath = "C:\\Users\\LiuYuan\\Workspaces\\routeSearch\\routeSearch\\Data\\output.txt";
 		try {
 			FileWriter fr = new FileWriter(outputPath);
 			for(int n=0;n<3;n++){
@@ -246,7 +249,7 @@ public class RouteSearchService {
 			fr.close();
 		} catch (Exception e) {
 			// TODO: handle exception
-		}
+		}*/
 		return obj;
 	}
 	
@@ -619,13 +622,13 @@ public class RouteSearchService {
 		}
 		runSat = getTripSat(runTime);
 		
-		if(p==1&&index_t==100){
+		/*if(p==1&&index_t==100){
 			System.out.println("路径：\n");
 			System.out.println("waitSat:"+waitSat+"\n");
 			System.out.println("runSat:"+runSat+"\n");
 			System.out.println("transferSat:"+transferSat+"\n");
 			System.out.println("congestionSat:"+congestionSat+"\n");
-		}
+		}*/
 		
 		if(waitSat==-1){
 			route.costSatisfaction[p][index_t] = (2.9*runSat + 2.5*transferSat + 2.5*congestionSat)/(2.9+2.5+2.5);
@@ -646,7 +649,7 @@ public class RouteSearchService {
 	 */
 	private static void computecostSat(Route route, int p ,int stime) {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss");
-		route.costSatisfaction = new double[3][24*12];
+		
 		try {
 			//仿真起始时间
 			String sTime = "06:10:00";
@@ -822,7 +825,7 @@ public class RouteSearchService {
 				runSat = getTripSat(runTime);
 				
 				
-				if(index_t==89&&p==1){
+				/*if(index_t==89&&p==1){
 					
 					if(transferSat == 10){
 						System.out.println("---"+p);
@@ -833,7 +836,7 @@ public class RouteSearchService {
 					System.out.println("transferSat:"+transferSat+"\n");
 					System.out.println("congestionSat:"+congestionSat+"\n");
 					}
-				}
+				}*/
 				
 //				if(waitSat==10){
 //					route.costSatisfaction[p][index_t] = (2.9*runSat + 2.5*transferSat + 2.5*congestionSat)/(2.9+2.5+2.5);

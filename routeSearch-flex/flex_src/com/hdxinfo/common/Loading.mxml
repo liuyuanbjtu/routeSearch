@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Box xmlns:mx="http://www.adobe.com/2006/mxml"
+		backgroundColor="#FFFFFF"
+		creationComplete="init()"
+		backgroundAlpha="0.5"
+		width="188"
+		height="130">
+	<mx:Script>
+		<![CDATA[
+		    import flash.net.URLRequest;
+		    import com.ldfsoft.flex.player.GIFPlayer;
+		    
+		    private var gifPlayer:GIFPlayer = new GIFPlayer;
+		    
+			private function init():void
+			{
+				var request:URLRequest = new URLRequest("assets/loading.gif");
+				gifPlayer.load(request);
+				img.addChild(gifPlayer);
+				gifPlayer.visible = true;
+			}
+		]]>
+	</mx:Script>
+	<mx:Image id="img"/>
+</mx:Box>

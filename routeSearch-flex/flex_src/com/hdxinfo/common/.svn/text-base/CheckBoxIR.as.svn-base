@@ -1,0 +1,67 @@
+package cn.com.common
+{
+	import flash.display.DisplayObject;
+	import flash.events.Event;
+	import flash.text.TextField;
+
+	import mx.collections.ArrayCollection;
+	import mx.controls.Alert;
+	import mx.controls.CheckBox;
+
+	public class CheckBoxIR extends CheckBox
+	{
+
+		public function CheckBoxIR()
+		{
+			super();
+			this.addEventListener(Event.CHANGE, cgHandler);
+		}
+
+		override public function set data(value:Object):void
+		{
+			super.data=value;
+
+			//以下代码用于判断记录是否被选中，根据需要可修改
+			if (MyDataGrid(listData.owner).isInSelected(data))
+			{
+				this.selected=true;
+			}
+			else
+			{
+				this.selected=false;
+			}
+		}
+
+
+		//居中显示   
+		override protected function updateDisplayList(w:Number, h:Number):void
+		{
+			super.updateDisplayList(w, h);
+
+			for (var i:Number=0; i < numChildren; i++)
+			{
+				var c:DisplayObject=getChildAt(i);
+				if (!(c is TextField))
+				{
+					c.x=Math.round((w - c.width) / 2);
+					c.y=Math.round((h - c.height) / 2);
+				}
+			}
+		}
+
+		protected function cgHandler(event:Event):void
+		{
+
+			var dg:MyDataGrid=MyDataGrid(listData.owner);
+
+			if (this.selected == true)
+			{
+				dg.addToSelected(data);
+			}
+			else
+			{
+				dg.delFromSelected(data);
+			}
+		}
+	}
+}

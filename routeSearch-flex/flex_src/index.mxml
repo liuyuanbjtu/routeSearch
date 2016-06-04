@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml"
+	            xmlns:esri="http://www.esri.com/2008/ags"
+	            xmlns:common="com.hdxinfo.common.*"
+	            xmlns:rs="com.hdxinfo.routeSearch.*"
+				layout="absolute"
+				fontSize="12"
+				creationComplete="init()"
+				backgroundColor="white"
+				width="100%"
+				height="100%"
+				horizontalScrollPolicy="off"
+				verticalScrollPolicy="off">
+	
+	<mx:Script>
+		<![CDATA[
+		import mx.collections.ArrayCollection;
+		import mx.events.FlexEvent;
+		[Bindable]
+		private var chartArray:ArrayCollection = new ArrayCollection;
+		
+		]]>
+	</mx:Script>
+	<mx:Script source="index.as"/>
+	<mx:Style source="css/main.css"/>
+	<mx:RemoteObject id="RouteSearchService"
+					 destination="RouteSearchService"
+					 showBusyCursor="true"/>
+	
+	<mx:VBox width="100%"
+			 height="100%"
+			 verticalGap="0">
+		<mx:Canvas width="100%"
+				   height="90">
+			<mx:Canvas backgroundImage="@Embed(source='assets/top.png')"
+					   width="100%"
+					   height="47"/>
+			<mx:Canvas width="100%"
+					   height="43"
+					   y="46">
+				<mx:Canvas width="360"
+						   height="100%"
+						   backgroundImage="@Embed(source='assets/topRight.png')">
+					<mx:Image x="0"
+							  y="1"
+							  source="assets/pathFinding1.png"/>
+				</mx:Canvas>
+				<mx:Canvas x="361"
+						   y="0"
+						   width="100%"
+						   height="100%"
+						   backgroundImage="@Embed(source='assets/topRight.png')">
+					<mx:Image x="3"
+							  y="1"
+							  source="assets/trainPic.png"/>
+				</mx:Canvas>
+			</mx:Canvas>
+		</mx:Canvas>
+		<mx:Box width="100%"
+				height="100%"
+				id="mainWindow">
+		   <rs:RouteSearch id="shangLabel" allStationsArr="{allStationArr}"/>
+		</mx:Box>
+
+		
+	</mx:VBox>
+	
+</mx:Application>

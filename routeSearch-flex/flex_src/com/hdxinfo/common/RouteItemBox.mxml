@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml"
+		 xmlns:common="com.hdxinfo.common.*"
+		 width="98%"
+		 verticalGap="0"
+		 currentState="hideDetail"
+		 creationComplete="init()">
+	<mx:states>
+		<mx:State name="hideDetail">
+			<mx:RemoveChild target="{vbox1}"/>
+		</mx:State>
+	</mx:states>
+	<mx:Script>
+		<![CDATA[
+			import com.hdxinfo.routeSearch.RouteSearch;
+			
+			import mx.collections.ArrayCollection;
+		
+		    [Bindable]
+		    public var num:int;//路径序号
+		    [Bindable]
+		    public var routeStr:String;//经过路线字符串
+		    public var lineArr:ArrayCollection;// 此线路经过的路线名称集合
+		    public var transferArr:ArrayCollection;//换乘车站名称集合
+		    public var allStationArr:ArrayCollection;//所有车站名称集合
+		    public var routeSearch:RouteSearch;
+		    private var routeIntervalStr:String = "";//线路经过区间字符串
+			public var costSatArray:ArrayCollection;
+			
+			public var totalTime:Number;
+			public var waitTime:Number;
+			public var costSat:Number;
+			public var temp:Number;
+			
+			//分时满意度
+	//		public var costSatArray:ArrayCollection = new ArrayCollection();
+		    
+		    private function init():void
+		    {
+				
+				var timeBox:TimeBox = new TimeBox;
+				timeBox.totalTime = Math.round(totalTime / 60);
+				timeBox.waitTime = Math.round(waitTime / 60);
+				timeBox.costSat = (Math.round(costSat*100))/100;
+				timeBox.costSatArray = costSatArray;
+				detailBox.addChild(timeBox);
+				
+		    	var length:int = transferArr.length;
+		    	for(var i:int = 0; i < length; i++)
+		    	{
+		    		var sName:String = transferArr[i];
+		    		if(i != (length - 1))
+		    		{
+						
+		    			var forwardItem:ForwardStationBox = new ForwardStationBox();
+						forwardItem.sName=sName;
+						var lineName:String = lineArr[i];
+						var nextS:String = allStationArr[allStationArr.getItemIndex(sName) + 1];
+						forwardItem.info="乘坐地铁" + lineName + " " + nextS + "方向";
+						detailBox.addChild(forwardItem);
+						
+						var middleItem:LeaveTimeBox = new LeaveTimeBox();
+						var nextStaName:String = transferArr[i + 1];
+						var index:int = allStationArr.getItemIndex(nextS);
+						var crossStationNum:int = allStationArr.getItemIndex(nextStaName) - allStationArr.getItemIndex(sName);
+						middleItem.crossStationNum = crossStationNum;
+						var itemArr:ArrayCollection = new ArrayCollection();
+						for(var j:int = 0; j < (crossStationNum - 1); j++)
+						{
+							itemArr.addItem(allStationArr.getItemAt(index + j));
+						}
+						middleItem.itemArr = itemArr;
+						middleItem.currentState = "outline";
+						detailBox.addChild(middleItem);
+		    		}
+		    		else
+		    		{
+		    			var endItemBox:LatestStationBox = new LatestStationBox();
+						endItemBox.sName = sName;
+						detailBox.addChild(endItemBox);
+		    		}
+		    	}
+		    	
+		    	for(j = 0; j < allStationArr.length - 1; j++)
+				{	
+					if(j != allStationArr.length - 1)
+					{
+						routeIntervalStr = routeIntervalStr + allStationArr[j] + "-" + allStationArr[j + 1] + ",";
+					}
+					else
+					{
+						routeIntervalStr = routeIntervalStr + allStationArr[j] + "-" + allStationArr[j + 1];
+					}
+				}
+		    	
+		    	//if(num == 1)
+					//detailBtnClickHandler();
+		    }
+		
+			private function detailBtnClickHandler():void
+			{
+				if(currentState == "hideDetail")
+				{
+					currentState = null;
+					routeSearch.displayRouteAndDetail(Number(num) - 1, routeIntervalStr);
+					shouQi.source="assets/shouQi.png"; 
+				}
+				else
+				{
+					routeSearch.clearAllLayer();
+					currentState = "hideDetail";
+					shouQi.source="assets/zhanKai.png";
+				}
+			}
+		]]>
+	</mx:Script>
+
+	<mx:HBox width="100%"
+			 backgroundColor="#f3f3f3"
+			 borderColor="#A2A2A2"
+			 borderStyle="solid"
+			 horizontalGap="0">
+		<mx:Box width="30"
+				height="100%"
+				horizontalAlign="center"
+				verticalAlign="top"
+				paddingTop="5">
+			<common:FullColorBox text="{num}"/>
+		</mx:Box>
+		<mx:VBox width="100%"
+				 id="vBox"
+				 verticalGap="0"
+				 paddingTop="3"
+				 paddingBottom="3">
+			<mx:Text text="{routeStr}"
+					 color="#709ede"
+					 fontSize="15"
+					 fontWeight="bold"
+					 textDecoration="underline"
+					 fontStyle="normal"
+					 leading="4"
+					 id="route"/>
+		</mx:VBox>
+		<mx:Box width="82"
+				height="100%"
+				verticalAlign="middle"
+				horizontalAlign="right">
+			<mx:Image width="24"
+					  height="24"
+					  source="assets/shouQi.png"
+					  click="detailBtnClickHandler()"
+					  id="shouQi"
+					  mouseChildren="false"
+					  buttonMode="true"
+					  useHandCursor="true"/>
+		</mx:Box>
+	</mx:HBox>
+	<mx:VBox backgroundColor="#FFFFFF"
+			 width="100%"
+			 borderColor="#A2A2A2"
+			 borderStyle="solid"
+			 borderSides="left right bottom"
+			 verticalGap="0" id="vbox1">
+		<mx:HBox width="100%"
+				 height="100%"
+				 horizontalGap="0">
+			<mx:Canvas width="30"
+					   height="100%">
+				<mx:Image width="18"
+						  height="18"
+						  top="25"
+						  left="7"
+						  source="assets/greenTrain.png"/>
+				<mx:Image width="18"
+						  height="18"
+						  left="7"
+						  bottom="6"
+						  source="assets/redTrain.png"/>
+			</mx:Canvas>
+			<mx:VBox width="100%"
+					 height="100%"
+					 verticalGap="3"
+					 paddingTop="3"
+					 paddingBottom="3"
+					 fontSize="12"
+					 id="detailBox" fontFamily="微软雅黑">
+			</mx:VBox>
+		</mx:HBox>
+
+	</mx:VBox>
+</mx:VBox>

@@ -1,0 +1,75 @@
+package cn.com.common
+{
+	import flash.display.DisplayObject;
+	import flash.events.Event;
+	import flash.text.TextField;
+
+	import mx.controls.CheckBox;
+	import mx.controls.DataGrid;
+	import mx.events.DataGridEvent;
+
+	public class CheckHeadBoxIR extends CheckBox
+	{
+		public function CheckHeadBoxIR()
+		{
+			super();
+			this.addEventListener(Event.CHANGE, cgHandler);
+		}
+
+		override public function set data(value:Object):void
+		{
+			//super.data = value;    //一定不要有这句   
+			this.selected=false;
+			DataGrid(listData.owner).addEventListener(DataGridEvent.HEADER_RELEASE, sortEventHandler);
+		}
+
+		private function sortEventHandler(event:DataGridEvent):void
+		{
+
+			if (event.itemRenderer == this)
+			{
+				event.preventDefault();
+			}
+		}
+
+		//居中显示   
+		override protected function updateDisplayList(w:Number, h:Number):void
+		{
+			super.updateDisplayList(w, h);
+
+			for (var i:Number=0; i < numChildren; i++)
+			{
+				var c:DisplayObject=getChildAt(i);
+				if (!(c is TextField))
+				{
+					c.x=Math.round((w - c.width) / 2);
+					c.y=Math.round((h - c.height) / 2);
+				}
+			}
+		}
+
+		protected function cgHandler(event:Event):void
+		{
+
+			//得到DataGrid里的listItems   
+			var listItems:Array=MyDataGrid(listData.owner).listRendererArray;
+
+			if (listItems.length > 0)
+			{
+				for (var i:Number=0; i < listItems.length; i++)
+				{
+					if (listItems[i].length > 0)
+					{
+						if (listItems[i][0].selected != this.selected)
+						{
+							listItems[i][0].selected=this.selected;
+							listItems[i][0].dispatchEvent(new Event(Event.CHANGE));
+						}
+					}
+				}
+			}
+		/*var ii:Object = dataGrid.indexToItemRenderer(2).data;*/
+		}
+	}
+
+}

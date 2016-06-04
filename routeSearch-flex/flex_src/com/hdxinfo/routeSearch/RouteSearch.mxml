@@ -1,0 +1,839 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml"
+		 xmlns:esri="http://www.esri.com/2008/ags"
+		 xmlns:common="com.hdxinfo.common.*"
+		 width="100%"
+		 height="100%"
+		 horizontalGap="0" creationComplete="init()">
+		 
+	<mx:Script>
+		<![CDATA[
+			import com.esri.ags.Graphic;
+			import com.esri.ags.geometry.Extent;
+			import com.esri.ags.geometry.Polyline;
+			import com.esri.ags.symbol.InfoSymbol;
+			import com.esri.ags.tasks.FeatureSet;
+			import com.esri.ags.tasks.Query;
+			import com.hdxinfo.common.RouteItemBox;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.core.Application;
+			import mx.formatters.DateFormatter;
+			import mx.managers.PopUpManager;
+			import mx.rpc.AsyncResponder;
+			import mx.rpc.events.ResultEvent;
+			
+			[Embed("assets/jiaoKuaiJie1.png")]
+			private var jiaoKuaiJie1:Class;
+			[Embed("assets/jiaoKuaiJie2.png")]
+			private var jiaoKuaiJie2:Class;
+			[Embed("assets/shaoHuanCheng1.png")]
+			private var shaoHuanCheng1:Class;
+			[Embed("assets/shaoHuanCheng2.png")]
+			private var shaoHuanCheng2:Class;
+			[Embed("assets/jiaoShuShi1.png")]
+			private var jiaoShuShi1:Class;
+			[Embed("assets/jiaoShuShi2.png")]
+			private var jiaoShuShi2:Class;
+			
+			private var normalArr:ArrayCollection=new ArrayCollection();
+			private var interruptNoDispatchArr:ArrayCollection=new ArrayCollection();
+			private var interruptDispatchArr:ArrayCollection=new ArrayCollection();
+			//线路边框颜色集合
+			private var borderColorArr:Array = ["#2571b7","#F9E103","#0066CC","#EA6632","#009900","#FF0000","#8B1F5C","#F9E103","#0066CC","#EA6632","#009900","#FF0000","#8B1F5C","#00A1CC","#EA6632","#00A1CB","#C9E887"];
+			//背景颜色集合
+			private var backgroundColorArr:Array = ["#FFFFFF","#F9E103","#0066CC","#EA6632","#009900","#FF0000","#8B1F5C","#F9E103","#0066CC","#EA6632","#009900","#FF0000","#8B1F5C","#00A1CC","#EA6632","#00A1CB","#C9E887"];
+			//线路名称集合
+			private var lineNameArr:Array = ["全部线路","1号线","2号线","4号线","5号线","6号线","8号线","9号线","10号线","13号线","14号线","15号线","八通线","昌平线","房山线","机场线","亦庄线"];
+			private var clickedLabel:Label;
+			[Bindable]
+			public var allStationsArr:ArrayCollection;
+			
+			private var timeStr:String = "";
+			private var timer:Timer=new Timer(60000);
+			private var systemTime:String = "";
+			
+			public var breakArr:ArrayCollection = new ArrayCollection();//中断区间集合
+			public var breakTongDaoArr:ArrayCollection = new ArrayCollection();//换乘通道封闭集合
+			public var breakAndTongDaoArr:ArrayCollection = new ArrayCollection();//中断区间和换乘通道封闭
+			public var influnceS:ArrayCollection = new ArrayCollection();//受影响车站集合
+			private var lineArr:ArrayCollection = new ArrayCollection();
+			
+			private function returnTime(i:int):String{
+				var strTime:String;
+				var hour:int;
+				var min:int;
+				hour = Math.floor(i/12);
+				min = (i%12)*5;
+				if(min<10){
+					strTime = hour+":"+"0"+min;
+				}
+				else{
+					strTime = hour+":"+min;
+				}
+				return strTime;
+			}
+			private function init():void
+			{
+				var df:DateFormatter = new DateFormatter();
+				df.formatString = "YYYY-MM-DD HH:NN:SS";
+				var d:Date=new Date();
+				timeChooser.text = df.format(d);
+				systemTime = timeChooser.text;
+				
+				timer.addEventListener(TimerEvent.TIMER, timerQueryBreak);
+				timer.start();
+				
+				doQueryBreak(systemTime);
+			}
+			
+			private function timerQueryBreak(event:TimerEvent):void
+			{
+				var timeStr:String=systemTime.split(" ")[1];
+				var timeArr:Array=timeStr.split(":");
+				var minute:int=Number(timeArr[1]) + 1;
+				var hour:int = Number(timeArr[0]);
+				var minuteStr:String="";
+				if (minute < 10)
+				{
+					minuteStr="0" + minute;
+				}
+				else if(minute >= 59)
+				{
+					minuteStr="00";
+					hour++;
+				}
+				else
+				{
+					minuteStr="" + minute;
+				}
+				
+				var hourStr:String = "";
+				if(hour < 10)
+				{
+					hourStr = "0" + hour;
+				}
+				else if(hour >= 23)
+				{
+					hourStr = "00";
+				}
+				else
+				{
+					hourStr = "" + hour;
+				}
+				
+				
+				systemTime=systemTime.split(" ")[0] + " " + hourStr + ":" + minuteStr + ":" + timeArr[2];
+				
+				doQueryBreak(systemTime);
+			}
+			
+			private function doQueryBreak(queryTime:String):void
+			{
+				breakArr.removeAll();
+				breakTongDaoArr.removeAll();
+				influnceS.removeAll();
+				RouteSearchService.addEventListener(ResultEvent.RESULT, getBreakAndInflunceStation);
+				RouteSearchService.queryBreak(queryTime);
+			}
+			
+			private function getBreakAndInflunceStation(event:ResultEvent):void
+			{
+				RouteSearchService.removeEventListener(ResultEvent.RESULT, getBreakAndInflunceStation);
+				var resultArr:ArrayCollection = event.result as ArrayCollection;
+				for(var i:int = 0; i < resultArr.length; i++)
+				{
+					var obj:Object = resultArr[i];
+					var obj1:Object = obj.SStation;
+					var obj2:Object = obj.EStation;
+					if(obj1.stationName == obj2.stationName)
+					{
+						breakTongDaoArr.addItem(obj);
+					}
+					else
+					{
+						breakArr.addItem(obj);
+					}
+				}
+				//influnceS = resultArr[1];
+				
+				//突发事件下，较舒适不可用，置灰显示
+				if(breakAndTongDaoArr.length > 0)
+				{
+					//		shaoBuXing.setStyle("backgroundImage", jiaoShuShi3);
+					//		shaoBuXing.mouseEnabled = false;
+					//		shaoBuXing.enabled = false;
+				}
+				
+				if(breakArr.length > 0)
+				{
+					queryBreakMap();
+				} else {
+					breakGraphicsLayer.clear();
+				}
+				
+				if(breakTongDaoArr.length > 0)
+				{
+					queryBreakTongDaoMap();
+				} else {
+					tongDaoGraphicsLayer.clear();
+				}
+			}
+			
+			//查询换乘通道封闭车站地图数据
+			public function queryBreakTongDaoMap():void
+			{
+				tongDaoGraphicsLayer.clear();
+				
+				var list:ArrayCollection = breakTongDaoArr;
+				var length:int=list.length;
+				var str:String="";
+				if(length > 0)
+				{
+					for (var i:int=0; i < length; i++)
+					{
+						var obj:Object=list[i];
+						var stationName:String=obj.breakStaStr;
+						var sName:String=stationName.substring(0, stationName.indexOf("-"));
+						if (i == length - 1)
+						{
+							str=str + "'" + sName + "'";
+						}
+						else
+						{
+							str=str + "'" + sName + "'" + ",";
+						}
+					}
+					var query:Query=new Query();
+					query.where="D_NAME in (" + str + ")";
+					query.outFields=["*"];
+					query.returnGeometry=true;
+					queryTaskForStation.disableClientCaching=true;
+					queryTaskForStation.execute(query, new AsyncResponder(onBreakTongDaoResult, onFault));
+				}
+			}
+			
+			//在地图上高亮显示换乘通道封闭车站
+			private function onBreakTongDaoResult(featureSet:FeatureSet, tocken:Object=null):void
+			{
+				for each (var graphic:Graphic in featureSet.features)
+				{
+					tongDaoGraphicsLayer.add(graphic);
+				}
+			}
+			
+			//查询突发事件发生区段的地图数据
+			public function queryBreakMap():void
+			{
+				breakGraphicsLayer.clear();
+				
+				var list:ArrayCollection = breakArr;
+				var length:int=list.length;
+				var str:String="";
+				if(length > 0)
+				{
+					for (var i:int=0; i < length; i++)
+					{
+						var obj:Object=list[i];
+						if (i == length - 1)
+						{
+							str=str + "'" + obj.breakNo + "'";
+						}
+						else
+						{
+							str=str + "'" + obj.breakNo + "'" + ",";
+						}
+					}
+					var query:Query=new Query();
+					query.where="NEW_LINE_U IN (" + str + ")";
+					query.outFields=["*"];
+					query.returnGeometry=true;
+					queryTaskForLine.disableClientCaching=true;
+					queryTaskForLine.execute(query, new AsyncResponder(onBreakResult, onFault));
+				}
+			}
+			
+			//在地图上高亮显示突发事件发生区间
+			private function onBreakResult(featureSet:FeatureSet, tocken:Object=null):void
+			{
+				for each (var graphic:Graphic in featureSet.features)
+				{
+					breakGraphicsLayer.add(graphic);
+				}
+			}
+			
+			//弹出线路选择框
+			private function popChooseLinePop(event:MouseEvent):void
+			{
+				var label:Label=Label(event.target);
+				clickedLabel=label;
+				var linesP:LineWithout6ChoosePop=new LineWithout6ChoosePop();
+				var point:Point=new Point();
+				point=label.localToGlobal(point);
+				linesP.x=point.x - 10;
+				linesP.y=point.y + label.height + 2;
+				linesP.routeSearch=this;
+				PopUpManager.addPopUp(linesP, startStationBox, false);
+			}
+			
+			//选择线路后，在页面上显示所选的线路
+			public function chooseLine(s:int):void
+			{
+				var box:Box=Box(clickedLabel.parent);
+				var str:String=clickedLabel.id;
+				
+				box.setStyle("backgroundColor", backgroundColorArr[s]);
+				box.setStyle("borderColor", borderColorArr[s]);
+   			if (str == "shangLabel")
+					sstaid.dataProvider=Application.application.stationsArr[s];
+				else
+					estaid.dataProvider=Application.application.stationsArr[s];
+				if (s == 0)
+				{
+					clickedLabel.setStyle("color", "#2571b7");
+				}
+				else
+				{
+					clickedLabel.setStyle("color", "#FFFFFF");
+				}
+				
+				clickedLabel.text = lineNameArr[s];
+			}
+
+
+		    //查询路径
+			private function searchRoute():void
+			{
+				clearAllLayer();
+				RouteSearchService.addEventListener(ResultEvent.RESULT, getRouteArr);
+				var systemTime:String = timeChooser.text;
+				if (systemTime == null || systemTime == "") {
+					Alert.show("请选择查询时间...", "提示");
+					return;
+				}
+				RouteSearchService.searchRoute(sstaid.selectedItem,estaid.selectedItem, systemTime);
+			}
+			
+			//获取查到的路径集合
+			private function getRouteArr(event:ResultEvent):void
+			{
+				RouteSearchService.removeEventListener(ResultEvent.RESULT, getRouteArr);
+				var resultArr:Array = event.result as Array;
+				//Java中的obj，里面包含正常情况下的路径集合，含有多条路径
+				normalArr = resultArr[0];
+				//Java中的obj，里面包含突发无调度情况的路径集合，含有多条路径
+				interruptNoDispatchArr = resultArr[1];
+				//Java中的obj，里面包含突发有调度情况的路径集合，含有多条路径
+				interruptDispatchArr = resultArr[2];
+				
+				jiaoKuaiJie.dispatchEvent(new MouseEvent(MouseEvent.CLICK));
+			}
+			
+			//条件变化进行切换
+			private function changeCondition(event:MouseEvent):void
+			{
+				var conditionBox:Box=Box(event.currentTarget);
+				var condition:String=conditionBox.id;
+				var index:int;
+				if(condition == "jiaoKuaiJie")
+				{
+					index=0;
+					jiaoKuaiJie.setStyle("backgroundImage", jiaoKuaiJie2);
+					shaoHuanCheng.setStyle("backgroundImage", shaoHuanCheng1);
+					shaoBuXing.setStyle("backgroundImage", jiaoShuShi1);
+				}
+				else if(condition == "shaoHuanCheng")
+				{
+					index=1;
+					jiaoKuaiJie.setStyle("backgroundImage", jiaoKuaiJie1);
+					shaoHuanCheng.setStyle("backgroundImage", shaoHuanCheng2);
+					shaoBuXing.setStyle("backgroundImage", jiaoShuShi1);
+				} else {
+					index=2;
+					jiaoKuaiJie.setStyle("backgroundImage", jiaoKuaiJie1);
+					shaoHuanCheng.setStyle("backgroundImage", shaoHuanCheng1);
+					shaoBuXing.setStyle("backgroundImage", jiaoShuShi2);
+				}
+				
+				if (index == 0)
+				{
+					showRouteDetail(normalArr,index);
+					
+				}
+				else if (index == 1)
+				{
+					showRouteDetail(interruptNoDispatchArr,index);
+				}
+				else if(index == 2)
+				{
+					showRouteDetail(interruptDispatchArr,index);
+				}
+			}
+			
+			//显示路径细节
+			//输入多条路径集合，如normalArr、interruptNoDispatchArr、interruptDispatchArr
+			private function showRouteDetail(routesArr:ArrayCollection,index:int):void
+			{
+				vbox.setStyle("verticalAlign", "top");
+				vbox.removeAllChildren(); //清空所有对象
+				var item:RouteItemBox;
+				for (var i:int=0; i < routesArr.length; i++)
+				{
+					//obj是一条路径，相当于Java中的RouteBean对象
+					var obj:Object = routesArr[i];
+					item = new RouteItemBox();
+					item.num = i + 1;
+					item.routeStr = obj.routeStr;
+					item.transferArr = obj.transferArr;
+					item.lineArr = obj.lineArr;
+					item.allStationArr = obj.allStationArr;
+					item.routeSearch = this;
+					item.totalTime = obj.totalTime;
+					item.waitTime = obj.waitTime;
+					item.costSat = obj.costSatisfaction;
+					var costSatArray:ArrayCollection=new ArrayCollection();
+  				    
+						for(var k:int=0;k<12*24;k++)
+						{
+							if(k>=6*12+5&&k<9*12)//6-9点
+							{
+								var cost:Object = new Object();
+								cost.strTime = returnTime(k);
+									
+									cost.costSat = obj.costSatArray[0][k];
+								
+									cost.costSat1 = obj.costSatArray[1][k];
+								
+									cost.costSat2 = obj.costSatArray[2][k];
+									costSatArray.addItem(cost);
+								
+							}
+						}
+					
+					//var cost:Object = new Object();
+//					cost.index = index;
+					//cost.costSatArray = obj.costSatArray;
+					//item.costSatArray=cost.costSatArray;//.addItem(cost);
+//					
+					item.costSatArray = costSatArray;
+					var  a:Number=0;
+					a=obj.temp;
+//					item.obj = obj;
+					if (i != 0)
+					{
+						item.currentState=null;
+					}
+					vbox.addChild(item);
+				}
+				
+//				openLineChart();
+			}
+			
+			//查询路径
+			public function displayRouteAndDetail(index:int, routeIntervalStr:String):void {
+				var items:Array=vbox.getChildren();
+				for (var j:int=0; j < items.length; j++)
+				{
+					if (j != index)
+					{
+						items[j].currentState="hideDetail";
+						items[j].shouQi.source="assets/zhanKai.png";
+					}
+				}
+				
+				var query1:Query=new Query();
+				query1.where="D_NAME IN('"+ sstaid.selectedItem +"','"+ estaid.selectedItem +"')";
+				query1.outFields=["*"];
+				query1.returnGeometry=true;
+				queryTaskForStation.disableClientCaching=true;
+				queryTaskForStation.execute(query1, new AsyncResponder(onStartAndEndResult, onFault));
+				
+				queryInterval(routeIntervalStr);
+			}
+			
+			//查询线路经过区间
+			private function queryInterval(routeIntervalStr:String):void
+			{
+				RouteSearchService.addEventListener(ResultEvent.RESULT, getIntervalArr);
+				RouteSearchService.queryInterval(routeIntervalStr);
+			}
+			
+			private function getIntervalArr(event:ResultEvent):void
+			{
+				RouteSearchService.removeEventListener(ResultEvent.RESULT, getIntervalArr);
+				var str:String = event.result as String;
+				var query:Query=new Query();
+				query.where="NEW_LINE_U in ( " + str + " )";
+				query.outFields=["*"];
+				query.returnGeometry=true;
+				queryTaskForLine.disableClientCaching=true;
+				queryTaskForLine.execute(query, new AsyncResponder(onInternalResult, onFault));
+			}
+			
+			private function onInternalResult(featureSet:FeatureSet, token:Object=null):void
+			{
+				myGraphicsLayer.clear();
+				var uExtent:Extent;
+				var myFirstGraphic:Graphic=featureSet.features[0];
+				uExtent=Polyline(myFirstGraphic.geometry).extent;
+				for each (var myGraphic1:Graphic in featureSet.features)
+				{
+					myGraphicsLayer.add(myGraphic1);
+					uExtent=uExtent.union(Polyline(myGraphic1.geometry).extent);
+				}
+				uExtent.xmin=uExtent.xmin - 0.025;
+				uExtent.xmax=uExtent.xmax + 0.025;
+				uExtent.ymin=uExtent.ymin - 0.025;
+				uExtent.ymax=uExtent.ymax + 0.025;
+				this.routeSearchMap.extent=uExtent;
+			}
+			
+			//在地图上显示起始站、终点站图标
+			private function onStartAndEndResult(featureSet:FeatureSet, token:Object=null):void
+			{
+				for each (var graphic:Graphic in featureSet.features)
+				{
+					if (graphic.attributes.D_NAME == sstaid.selectedItem)
+					{
+						graphic.symbol=pms_start;
+						startStationGraphicsLayer.add(graphic);
+					}
+					else
+					{
+						graphic.symbol=pms_end;
+						endStationGraphicsLayer.add(graphic);
+					}
+				}
+			}
+			//查询地图数据的错误处理
+			private function onFault(info:Object, token:Object=null):void
+			{
+				Alert.show(info.toString(), "Query Problem");
+			}
+
+
+		
+			//隐藏按钮点击事件处理函数
+			private function hidenBtnClickHandler():void
+			{
+				if(currentState == "hideLeft")
+				{
+					currentState = null;
+					
+					hideLeftBtn.defaultimg = "assets/hideLeft.png";
+					hideLeftBtn.mouseoverimg = "assets/hideLeft.png";
+					hideLeftBtn.clickimg = "assets/hideLeft.png";
+				}
+				else
+				{
+					currentState = "hideLeft";
+					
+					hideLeftBtn.defaultimg = "assets/showLeft.png";
+					hideLeftBtn.mouseoverimg = "assets/showLeft.png";
+					hideLeftBtn.clickimg = "assets/showLeft.png";
+				}
+			}
+			
+			public function clearAllLayer():void
+			{
+				myGraphicsLayer.clear();
+				startStationGraphicsLayer.clear();
+				endStationGraphicsLayer.clear();
+				tongDaoGraphicsLayer.clear();
+				breakGraphicsLayer.clear();
+			}
+			
+			
+		]]>
+	</mx:Script>
+	
+	<mx:Style>
+		.infoSymbol
+		{
+			backgroundColor: #FFFFFF;
+			backgroundAlpha: 0;
+		}
+	</mx:Style>
+	
+	<mx:states>
+		<mx:State name="hideLeft">
+			<mx:SetProperty target="{height0}" name="width" value="0"/>
+			<mx:SetProperty target="{height0}" name="height" value="0"/>
+		</mx:State>
+	</mx:states>
+	
+	<mx:RemoteObject id="RouteSearchService"
+					 destination="RouteSearchService"
+					 showBusyCursor="true"/>
+	
+	<mx:Glow id="glow"
+			 alphaFrom="1"
+			 alphaTo="0.3"
+			 blurXFrom="1"
+			 blurXTo="50"
+			 blurYFrom="0"
+			 blurYTo="50"
+			 repeatCount="0"
+			 duration="1000"
+			 color="#FF0000"/>
+			 
+	<mx:Glow id="glowGreen"
+			 alphaFrom="1"
+			 alphaTo="0.3"
+			 blurXFrom="1"
+			 blurXTo="50"
+			 blurYFrom="0"
+			 blurYTo="50"
+			 repeatCount="0"
+			 duration="1000"
+			 color="#629d23"/>
+			 
+	<mx:Glow id="glowYellow"
+			 alphaFrom="1"
+			 alphaTo="0.3"
+			 blurXFrom="1"
+			 blurXTo="50"
+			 blurYFrom="0"
+			 blurYTo="50"
+			 repeatCount="0"
+			 duration="1000"
+			 color="#FFE34B"/>
+	
+	<esri:SimpleLineSymbol id="sls"
+						   alpha="1"
+						   color="#23ac38"
+						   width="10"/>
+	<esri:SimpleLineSymbol id="breakSls"
+						   color="0xFF0000"
+						   width="2"/>
+	<esri:PictureMarkerSymbol id="pms_start"
+							  source="@Embed(source='assets/start.png')"/>
+	<esri:PictureMarkerSymbol id="pms_end"
+							  source="@Embed(source='assets/end.png')"/>
+	<esri:PictureMarkerSymbol id="pms_narmol"
+							  source="@Embed(source='assets/yellowCircle.png')"/>
+	
+	<esri:QueryTask id="queryTaskForStation"
+					url="{Application.application.stationLayer}"/>
+	<esri:QueryTask id="queryTaskForLine"
+					url="{Application.application.lineLayer}"/>
+	<mx:VBox width="360"
+			 id="height0"
+			 height="100%"
+			 horizontalAlign="center">
+		<mx:VBox borderColor="#A2A2A2"
+				 width="98%"
+				 height="27%"
+				 borderStyle="solid"
+				 verticalGap="0"
+				 cornerRadius="8">
+			<mx:HBox width="100%"
+					 height="25"
+					 verticalAlign="middle"
+					 borderSides="bottom"
+					 borderColor="#A2A2A2"
+					 borderStyle="solid"
+					 backgroundImage="@Embed(source='assets/findConditionTop.png')">
+				<mx:Spacer width="3"/>
+				<mx:Label text="查询条件"
+						  fontFamily="Arial"/>
+			</mx:HBox>
+			<mx:Canvas width="100%"
+					   height="100%" id="canvas1">
+				<mx:Image x="14"
+						  y="16"
+						  width="14"
+						  height="14"
+						  source="assets/startStation.png"/>
+				<common:MyButton x="313"
+								 y="24"
+								 width="29"
+								 height="29"
+								 toolTip="交换车站"
+								 defaultimg="assets/changeStation2.png"
+								 mouseoverimg="assets/changeStation3.png"
+								 clickimg="assets/changeStation2.png"/>
+				<mx:Image x="14"
+						  y="48"
+						  width="14"
+						  height="14"
+						  source="assets/endStation.png"/>
+				<mx:Label x="35"
+						  y="12"
+						  text="起点："/>
+				<mx:Label x="35"
+						  y="45"
+						  text="终点："/>
+				<mx:Box x="77"
+						y="12"
+						width="60"
+						height="22"
+						borderColor="#2571b7"
+						borderStyle="solid"
+						cornerRadius="3"
+						verticalAlign="middle"
+						horizontalAlign="center">
+					<mx:Label text="全部线路"
+							  color="#2571b7"
+							  width="59"
+							  textAlign="center"
+							  height="22"
+							  mouseChildren="false"
+							  buttonMode="true"
+							  useHandCursor="true"
+							  id="shangLabel"
+							  click="popChooseLinePop(event)"/>
+							
+				</mx:Box>
+				<mx:Box x="77"
+						y="45"
+						width="60"
+						height="22"
+						borderColor="#2571b7"
+						borderStyle="solid"
+						cornerRadius="3"
+						verticalAlign="middle"
+						horizontalAlign="center"
+						id="startStationBox">
+					<mx:Label text="全部线路"
+							  color="#2571b7"
+							  width="59"
+							  textAlign="center"
+							  height="22"
+							  mouseChildren="false"
+							  buttonMode="true"
+							  useHandCursor="true"
+							  id="xiaLabel"
+							  click="popChooseLinePop(event)"/>
+				</mx:Box>
+				<mx:ComboBox x="147"
+							 y="11"
+							 width="158"
+							 height="25"
+							 labelField="nm"
+							 id="sstaid"
+							 rowCount="15"
+							 dataProvider="{allStationsArr}"
+							 editable="false"
+							 fontWeight="normal"
+							 fontFamily="微软雅黑">
+				</mx:ComboBox>
+				<mx:ComboBox x="146"
+							 y="43"
+							 width="158"
+							 labelField="nm"
+							 id="estaid"
+							 rowCount="15"
+							 dataProvider="{allStationsArr}"
+							 editable="false"
+							 fontFamily="微软雅黑"
+							 fontWeight="normal">
+				</mx:ComboBox>
+				<mx:RadioButtonGroup id="aaa"/>
+				<common:TimeChooser x="14"
+									y="75"
+									width="148"
+									id="timeChooser"/>
+				
+				<common:MyButton x="200"
+								 y="75"
+								 defaultimg="assets/query1.png"
+								 mouseoverimg="assets/query2.png"
+								 clickimg="assets/query3.png"
+								 click="searchRoute()"/>
+				
+
+			</mx:Canvas>
+		</mx:VBox>
+
+		<mx:VBox width="98%"
+				 height="73%"
+				 horizontalAlign="center"
+				 verticalGap="0">
+			<mx:HBox width="100%"
+					 height="25"
+					 horizontalGap="0">
+				<mx:Box width="33%"
+						height="100%"
+						backgroundImage="@Embed(source='assets/jiaoKuaiJie1.png')"
+						borderColor="#A2A2A2"
+						borderStyle="solid"
+						mouseChildren="false"
+						buttonMode="true"
+						useHandCursor="true" id="jiaoKuaiJie" click="changeCondition(event)"/>
+				<mx:Box width="34%"
+						height="100%"
+						backgroundImage="@Embed(source='assets/shaoHuanCheng1.png')"
+						borderColor="#A2A2A2"
+						borderStyle="solid"
+						mouseChildren="false"
+						buttonMode="true"
+						useHandCursor="true" id="shaoHuanCheng" click="changeCondition(event)"/>
+				<mx:Box width="33%"
+						   height="100%"
+						   backgroundImage="@Embed(source='assets/jiaoShuShi1.png')"
+						   borderColor="#A2A2A2"
+						   borderStyle="solid"
+						   mouseChildren="false"
+						   buttonMode="true"
+						   useHandCursor="true" id="shaoBuXing"
+						   click="changeCondition(event)"/>
+			</mx:HBox>
+			<common:MyBox width="100%"
+						  borderSides="left right bottom"
+						  borderColor="#A2A2A2"
+						  borderStyle="solid"
+						  cornerRadius="8"
+						  height="100%"
+						  id="vbox" backgroundColor="#FFFFFF"
+						  horizontalAlign="center" paddingTop="5">
+				
+			</common:MyBox>
+		</mx:VBox>
+	</mx:VBox>
+	<mx:Canvas width="100%"
+			   height="100%">
+		<mx:Canvas width="100%"
+				   height="100%"
+				   borderColor="#A2A2A2"
+				   borderStyle="solid"
+				   backgroundColor="#FFFFFF" id="mapBox"
+				   x="2">
+			<common:MyButton x="0"
+							 y="184"
+							 width="15"
+							 height="57"
+							 id="hideLeftBtn"
+							 defaultimg="assets/hideLeft.png"
+							 mouseoverimg="assets/hideLeft.png"
+							 clickimg="assets/hideLeft.png"
+							 click="hidenBtnClickHandler()"/>
+			
+			<esri:Map logoVisible="false"
+					  zoomSliderVisible="false"
+					  scaleBarVisible="false"
+					  id="routeSearchMap"
+					  backgroundColor="#FFFFFF"
+					  x="15">
+				<esri:ArcGISDynamicMapServiceLayer url="{Application.application.basemap}"/>
+				<esri:GraphicsLayer id="myGraphicsLayer"
+									symbol="{sls}"/>
+				<esri:GraphicsLayer id="startStationGraphicsLayer"
+									creationCompleteEffect="{glowGreen}"/>
+				<esri:GraphicsLayer id="endStationGraphicsLayer"
+									creationCompleteEffect="{glow}"/>
+				
+				<esri:GraphicsLayer id="breakGraphicsLayer"
+									symbol="{breakSls}"
+									creationCompleteEffect="{glow}"/>
+				
+				<esri:GraphicsLayer id="tongDaoGraphicsLayer"
+									symbol="{pms_narmol}"
+									creationCompleteEffect="{glowYellow}"/>
+				
+			</esri:Map>
+		
+		</mx:Canvas>
+	</mx:Canvas>
+</mx:HBox>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml"  minWidth="955" minHeight="600">
+	<mx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.managers.PopUpManager;
+			// 创建窗体对象 
+		private var pop:LineChart; 
+		// 按钮单击事件 
+		private function openLineChart():void 
+		{ 
+		// 创建弹出窗体 
+		pop = LineChart(PopUpManager.createPopUp(this, LineChart, true)); 
+		PopUpManager.centerPopUp(pop);
+		// 设置弹出窗体是否显示关闭按钮 
+//		pop.showCloseButton = false; 
+		// 弹出窗体按钮单击事件 
+//		pop.btnLogin.addEventListener(MouseEvent.CLICK, closeLineChart); 
+		//				var line:LineChart;
+//		for (var i:int=0; i < routesArr.length; i++)
+//		{
+//		var obj:Object = routesArr[i];
+//		//					line = new LineChart();
+//		pop.lineArray = obj.costSatArray;
+//		}
+		} 
+		
+//		// 登录按钮单击事件 
+//		private function closeLineChart(e:MouseEvent):void 
+//		{ 
+//		// 移除弹出窗体 
+//		PopUpManager.removePopUp(pop); 
+//		} 
+			
+//		private var costSatArray:Array = [1,2,3];
+		[Bindable]
+		public var costSatArray:Array = [1,2,3,3,5,5];
+		public var costCollection:ArrayCollection = new ArrayCollection();
+			
+		private function showHelpWindow():void{
+			var help:winHelp = winHelp(PopUpManager.createPopUp(this,winHelp,true));
+//			help.costSatArray = costSatArray;
+//			var a:Array = help.costSatArrayCollection.source;
+//			var costSatArrayCollection:ArrayCollection = convert(costSatArray:Array);
+			var i:int = 0;
+			for each(var item:Number in costSatArray){
+				var cost:Object = new Object();
+				cost.num = i;
+				cost.costSat = item;
+				costCollection.addItem(cost);
+				i = i+1;
+			}
+			help.costSatArrayCollection = costCollection;
+			PopUpManager.centerPopUp(help);
+		}	
+			
+		]]>
+	</mx:Script>
+	
+	
+	<mx:Panel width="426" title="导航" fontSize="12" color="#FFFFFF">
+		
+		<mx:Button label="点击" click="showHelpWindow()" x="324" y="96" />
+			
+	</mx:Panel>
+</mx:Application>

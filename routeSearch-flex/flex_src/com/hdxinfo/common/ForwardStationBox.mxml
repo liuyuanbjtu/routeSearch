@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml"
+		 width="100%">
+	
+	<mx:Script>
+		<![CDATA[
+			[Bindable]
+			public var sName:String = "";
+			
+			[Bindable]
+			public var info:String = "";
+		]]>
+	</mx:Script>
+	<mx:Label text="{sName}"
+			  fontSize="12"
+			  fontWeight="bold"/>
+	<mx:Label text="{info}"
+			  fontSize="12"/>
+</mx:HBox>

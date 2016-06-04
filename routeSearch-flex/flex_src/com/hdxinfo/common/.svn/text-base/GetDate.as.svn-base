@@ -1,0 +1,66 @@
+package cn.com.common
+{
+
+	public class GetDate
+	{
+		protected var num:Number=86400000; //一天
+		private var now:Date;
+		private var nowm:Date;
+
+		public function GetDate()
+		{
+			now=new Date();
+			nowm = new Date();
+		}
+
+		//获取上一天的日期
+		public function getDayBefore(n:Number):String
+		{
+			now.setTime(now.getTime() - n * num);
+			var str:String=now.getFullYear() + "-" + (now.getMonth() + 1) + "-" + now.getDate();
+			return str;
+		}
+//		public function getTimeBefore(n:Number):String{
+//			now.setTime(now.getHours() - n * num);
+//			var str:String=now.getFullYear() + "-" + (now.getMonth() + 1) + "-" + now.getDate()+" "+now.getHours()+":00:00";
+//			return str;
+//		}
+
+		//获取下一天的日期
+		public function getDayAfter(n:Number):String
+		{
+			now.setTime(now.getTime() + n * num);
+			var str:String=now.getFullYear() + "-" + (now.getMonth() + 1) + "-" + now.getDate();
+			return str;
+		}
+
+		//获取上一月
+		public function getMothBefore(n:Number):String
+		{
+			nowm.setMonth(nowm.getMonth() - n, nowm.getDate());
+			var str:String=nowm.getFullYear() + "-" + (nowm.getMonth() + 1);
+			return str;
+		}
+
+		//获取下一月
+		public function getMothAfter(n:Number):String
+		{
+			now.setMonth(now.getMonth() + n, now.getDate());
+			var str:String=(now.getMonth() + 1) + "";
+			return str;
+		}
+
+		//月份
+		public function getM():String
+		{
+			return "";
+		}
+
+		//日期
+		public function getD():String
+		{
+			return "";
+		}
+
+	}
+}

@@ -1,0 +1,34 @@
+package cn.com.common
+{
+	import mx.containers.TabNavigator;
+
+	public class RichTabNaigator extends TabNavigator
+	{
+		public function RichTabNaigator()
+		{
+			super();
+		}
+
+		override protected function createChildren():void
+		{
+			if (!this.tabBar)
+			{
+				this.tabBar=new RichTabBar();
+				this.tabBar.name="tabBar";
+				this.focusEnabled=false;
+				this.tabBar.styleName=this;
+				this.tabBar.setStyle("borderStyle", "none");
+				this.tabBar.setStyle("paddingTop", 0);
+				this.tabBar.setStyle("paddingBottom", 0);
+				rawChildren.addChild(this.tabBar);
+			} 
+			super.createChildren();
+			this.invalidateSize();
+		}
+
+		override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void
+		{
+			super.updateDisplayList(unscaledWidth, unscaledHeight);
+		}
+	}
+}

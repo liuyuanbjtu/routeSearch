@@ -1,0 +1,17 @@
+package cn.com.common
+{
+	import flash.display.DisplayObject;
+	import flash.geom.Point;
+	
+	public class DisObjectCenter
+	{
+		//用于弹出窗体居中显示
+		public static function setCenter(stage:Object,displayObj:DisplayObject):void
+		{
+			var point:Point=new Point(0, 0);
+			displayObj.localToGlobal(point);
+			displayObj.x=stage.stageWidth / 2 - displayObj.width / 2;
+			displayObj.y=stage.stageHeight / 2 - displayObj.height / 2;
+		}
+	}
+}

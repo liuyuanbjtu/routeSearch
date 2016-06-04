@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<mapurl>
+	<!-- 首页地铁图底图 -->
+	<!--<subwayBaseMap url="http://192.168.7.161:8399/arcgis/rest/services/gzcgmap/MapServer"/>-->
+	<subwayBaseMap url="http://localhost:8399/arcgis/rest/services/BeijingMetro0506/MapServer"/>
+	
+	
+	<!-- 车站图层 -->
+	<!-- <stationLayer url="http://192.168.7.161:8399/arcgis/rest/services/gzcgmap/MapServer/0"/> -->
+	<stationLayer url="http://localhost:8399/arcgis/rest/services/BeijingMetro0506/MapServer/0"/>
+	
+	<!-- 首页查询图层 -->
+	<!-- <lineLayer url="http://192.168.7.161:8399/arcgis/rest/services/gzcgmap/MapServer/2"/>-->
+	<lineLayer url="http://localhost:8399/arcgis/rest/services/BeijingMetro0506/MapServer/1"/>
+</mapurl>                    

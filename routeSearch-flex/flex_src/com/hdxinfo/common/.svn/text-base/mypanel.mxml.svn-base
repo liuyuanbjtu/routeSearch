@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml"
+		  layout="absolute"
+		  width="100%"
+		  color="blue"
+		  click="fnclickpanel()"
+		  height="100%">
+	<mx:Script>
+		<![CDATA[
+			var sizeflag:String="true";
+
+			public function fnclickpanel():void
+			{
+				if (sizeflag == "true")
+				{
+					this.height=100;
+					this.sizeflag="false";
+				}
+				else
+				{
+					this.height=400;
+					this.sizeflag="true";
+				}
+			}
+		]]>
+	</mx:Script>
+
+
+</mx:Panel>

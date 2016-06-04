@@ -1,0 +1,23 @@
+package cn.com.common
+{
+
+	public class AmLegend
+	{
+		public function AmLegend()
+		{
+
+			override protected function createChildren():void
+			{
+				super.createChildren();
+				if (_amchartsLink)
+				{
+					_amchartsLink.alpha=0;
+					_amchartsLink.width=0;
+					_amchartsLink.height=0;
+				}
+				return;
+			}
+		}
+
+	}
+}

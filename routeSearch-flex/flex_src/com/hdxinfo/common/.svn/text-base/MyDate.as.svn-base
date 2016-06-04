@@ -1,0 +1,76 @@
+package cn.com.common
+{
+
+	public class MyDate
+	{
+		public function getNowDate():String
+		{
+			var date:Date=new Date();
+			var currentDate:String=date.getFullYear() + "年" + getString(date.getMonth() + 1) + "月" + getString(date.getDate()) + "日";
+			var xq:String=date.dayUTC.toString();
+			var returnxq:String="";
+			switch (xq)
+			{
+				case "0":
+					returnxq="星期日";
+					break;
+				case "1":
+					returnxq="星期一";
+					break;
+				case "2":
+					returnxq="星期二";
+					break;
+				case "3":
+					returnxq="星期三";
+					break;
+				case "4":
+					returnxq="星期四";
+					break;
+				case "5":
+					returnxq="星期五";
+					break;
+				case "6":
+					returnxq="星期六";
+					break;
+			}
+			return currentDate + " " + returnxq;
+		}
+
+		private function getString(num:Number):String
+		{
+			if (num < 10)
+			{
+				return "0" + num.toString();
+			}
+			else
+			{
+				return num.toString();
+			}
+		}
+
+		private function getYear(num:Number, str:String):Number
+		{
+			if (str == "00")
+			{
+				return num - 1;
+			}
+			else
+			{
+				return num;
+			}
+		}
+
+		private function getMoth(str:String):String
+		{
+			if (str == "00")
+			{
+				return "12";
+			}
+			else
+			{
+				return str;
+			}
+		}
+
+	}
+}

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml"
+		 width="100%"
+		 horizontalGap="0"
+		 verticalAlign="middle"
+		 horizontalAlign="right">
+	<mx:Metadata>
+        [Event(name="PageChange",type="cn.com.common.PageChangeEvent",bubbles="true",cancelable="true" )]
+    </mx:Metadata>
+	<mx:Script>
+		<![CDATA[
+			[Bindable]
+			public var totalNum:int=0; //总记录数
+			[Bindable]
+			public var pageCount:int=0; //总页数
+			[Bindable]
+			public var currentPage:int=0; //当前页
+			public var perPageNum:int=20; //每页显示的个数
+
+			//设置编辑状态
+			private function setSate():void
+			{
+				if (pageCount > 1)
+				{
+					firstLink.enabled=true;
+					prevLink.enabled=true;
+					nextLink.enabled=true;
+					lastLink.enabled=true;
+					if (currentPage == 1)
+					{
+						firstLink.enabled=false;
+						prevLink.enabled=false;
+					}
+					if (currentPage == pageCount)
+					{
+						nextLink.enabled=false;
+						lastLink.enabled=false;
+					}
+				}
+				else
+				{
+					firstLink.enabled=false;
+					prevLink.enabled=false;
+					nextLink.enabled=false;
+					lastLink.enabled=false;
+				}
+				OnPageChange();
+			}
+			//首页
+			private function firstPage():void
+			{
+				currentPage=1;
+				setSate();
+			}
+
+			//上一页
+			private function prevPage():void
+			{
+				currentPage-=1;
+				setSate();
+			}
+
+			//下一页
+			private function nextPage():void
+			{
+				currentPage+=1;
+				setSate();
+			}
+
+			//末页
+			private function lastPage():void
+			{
+				currentPage=pageCount;
+				setSate();
+			}
+
+			private function OnPageChange():void
+			{
+				//依据当前页面索引和每页记录数来构造一个“页面改变事件”
+				var evt:cn.com.common.PageChangeEvent=new PageChangeEvent(PageChangeEvent.CHANGED, currentPage, perPageNum);
+				dispatchEvent(evt);
+			}
+		]]>
+	</mx:Script>
+	<mx:LinkButton label="首页"
+				   id="firstLink"
+				   click="firstPage()"
+				   fontSize="12"/>
+	<mx:LinkButton label="上一页"
+				   id="prevLink"
+				   click="prevPage()"
+				   fontSize="12"/>
+	<mx:LinkButton label="下一页"
+				   id="nextLink"
+				   click="nextPage()"
+				   fontSize="12"/>
+	<mx:LinkButton label="末页"
+				   click="lastPage()"
+				   id="lastLink"
+				   fontSize="12"/>
+	<mx:Text text="页数"
+			 fontSize="12"
+			 color="#ff0000"/>
+	<mx:Text text="{currentPage}/{pageCount}"
+			 fontSize="12"/>
+	<mx:Text text="总记录数"
+			 fontSize="12"
+			 color="#ff0000"/>
+	<mx:Text text="{totalNum}"
+			 fontSize="12"/>
+</mx:HBox>

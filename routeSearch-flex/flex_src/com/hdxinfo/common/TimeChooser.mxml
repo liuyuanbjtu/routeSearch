@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<mx:Module xmlns:mx="http://www.adobe.com/2006/mxml"
+		   layout="absolute"
+		   height="25"
+		   xmlns:common="com.hdxinfo.common.*">
+	<common:VerticalMiddleTextInput x="0"
+									y="0"
+									width="133"
+									height="25"
+									editable="{initeditable}"
+									id="returnTime"
+									text="{initvalue}"
+									fontSize="10"
+									textAlign="left"/>
+	<mx:Button x="134"
+			   y="5"
+			   icon="@Embed(source='mx/controls/DateChooser.png')"
+			   fontWeight="normal"
+			   width="14"
+			   click="open(event)"
+			   height="14"
+			   mouseChildren="false"
+			   buttonMode="true"
+			   useHandCursor="true"/>
+	<mx:Script>
+		<![CDATA[
+			import mx.events.FlexMouseEvent;
+			import mx.events.NumericStepperEvent;
+			import mx.controls.NumericStepper;
+			import mx.events.ListEvent;
+			import mx.controls.Label;
+			import mx.containers.HBox;
+			import mx.controls.TileList;
+			import mx.core.IFlexDisplayObject;
+			import mx.events.CloseEvent;
+			import mx.controls.Button;
+			import mx.controls.Alert;
+			import mx.managers.PopUpManager;
+			import mx.containers.TitleWindow;
+			import mx.controls.Text;
+			
+			[Bindable]
+			private var initvalue: String;
+			[Bindable]
+			private var initeditable:Boolean;
+			
+			public var resultTime:Text;
+			private var m_width:Number = 168;
+			
+			private var pop:Object;
+			private var isOpen:Boolean = false;
+			private var nowTime:Date = new Date();
+			
+			private function open(event:MouseEvent):void{
+				resultTime = new Text();
+				if(!isOpen){
+					pop = PopUpManager.createPopUp(this, TitleWindow, false);
+					pop.showCloseButton = true;
+					pop.addEventListener(CloseEvent.CLOSE,closeHandler);
+					pop.addEventListener("mouseDownOutside", handleMouseDownOutside); 
+					pop.move(event.stageX+event.target.width-event.localX+5,event.stageY-event.localY);
+					//pop.title = nowTime.fullYear.toString() + " 年 " + (nowTime.month+1) + " 月";
+					pop.title = "时间选择";
+					pop.setStyle("fontSize",12);
+					pop.setStyle("backgroundAlpha","1");
+					pop.setStyle("backgroundColor","#FFFFFF");
+					
+					
+					var yearChangeHandler:Function = function(evt:NumericStepperEvent):void{
+						nowTime.setFullYear(evt.value,nowTime.month,nowTime.date);
+						hBoxMiddle.removeAllChildren();
+						hBoxMiddle.addChild(flushDays(nowTime));
+//						PopUpManager.removePopUp(pop as IFlexDisplayObject);
+//						isOpen = false;
+//						open(event);
+					}
+					
+					var monthChangeHandler:Function = function(evt:NumericStepperEvent):void{
+						nowTime.setFullYear(nowTime.fullYear,evt.value-1,nowTime.date);
+						hBoxMiddle.removeAllChildren();
+						hBoxMiddle.addChild(flushDays(nowTime));
+//						PopUpManager.removePopUp(pop as IFlexDisplayObject);
+//						isOpen = false;
+//						open(event);
+					}
+					
+					var minuteChangeHandler:Function = function(evt:NumericStepperEvent):void{
+						nowTime.setHours(nowTime.hours,evt.value,nowTime.seconds,nowTime.milliseconds);
+					}
+					
+					var hourChangeHandler:Function = function(evt:NumericStepperEvent):void{
+						nowTime.setHours(evt.value,nowTime.minutes,nowTime.seconds,nowTime.milliseconds);
+					}
+					
+					var testHandler:Function = function(event:ListEvent):void{
+						PopUpManager.removePopUp(pop as IFlexDisplayObject);
+						isOpen = false;
+						var month:int = nowTime.month + 1;
+						var monthStr:String = "";
+						if(month < 10)
+						{
+							monthStr = "0" + month;
+						}
+						else
+						{
+							monthStr = month + "";
+						}
+						
+						var day:int = event.target.selectedItems;
+						var dayStr:String = "";
+						if(day < 10)
+						{
+							dayStr = "0" + day;
+						}
+						else
+						{
+							dayStr = "" + day;
+						}
+						
+						var hourT:int = hour.value;
+						var hourStr:String = "";
+						if(hourT < 10)
+						{
+							hourStr = "0" + hourT;
+						}
+						else
+						{
+							hourStr = "" + hourT;
+						}
+						
+						var minuteT:int = minute.value;
+						var minuteStr:String = "";
+						if(minuteT < 10)
+						{
+							minuteStr = "0" + minuteT;
+						}
+						else
+						{
+							minuteStr = "" + minuteT;
+						}
+						
+						var secondsT:int = nowTime.seconds;
+						var secondsStr:String = "";
+						if(secondsT < 10)
+						{
+							secondsStr = "0" + secondsT;
+						}
+						else
+						{
+							secondsStr = "" + secondsT;
+						}
+						
+						
+						resultTime.text = nowTime.fullYear + "-" + monthStr + "-" 
+						                  + dayStr + " " + hourStr
+						                  + ":" + minuteStr + ":" +secondsStr;
+						returnTime.text =  resultTime.text;
+					}
+					
+					
+					var hBoxTop:HBox = new HBox();
+					hBoxTop.width = m_width;
+					var year:NumericStepper = new NumericStepper();
+					year.setStyle("fontSize",10);
+					year.stepSize = 1;
+					year.minimum = 1999;
+					year.maximum = 2999;
+					year.width = 60;
+					year.height = 20;
+					year.value = nowTime.fullYear;
+					year.addEventListener(NumericStepperEvent.CHANGE,yearChangeHandler);
+					
+					var y_label:Label = new Label();
+					y_label.text = "年";
+					y_label.setStyle("textAlign","center");
+					y_label.width = 15;
+					
+					var month:NumericStepper = new NumericStepper();
+					month.setStyle("fontSize",10);
+					month.stepSize = 1;
+					month.minimum = 0;
+					month.maximum = 13;
+					month.width = 50;
+					month.height = 20;
+					month.value = nowTime.month+1;
+					month.addEventListener(NumericStepperEvent.CHANGE,monthChangeHandler);
+					
+					var m_label:Label = new Label();
+					m_label.text = "月";
+					m_label.setStyle("textAlign","center");
+					m_label.width = 15;
+					
+					hBoxTop.addChild(year);
+					hBoxTop.addChild(y_label);
+					hBoxTop.addChild(month);
+					hBoxTop.addChild(m_label);
+					
+					pop.addChild(hBoxTop);
+					
+					var hBox:HBox = new HBox();
+					hBox.width = m_width;
+					hBox.setStyle("horizontalGap",0);
+					var weekName:Array = new Array("日","一","二","三","四","五","六");
+					for(var index:Number=0; index<weekName.length; index++){
+						var lab:Label = new Label();
+						lab.text = weekName[index];
+						lab.width = 24;
+						lab.setStyle("textAlign","center");
+						lab.setStyle("fontSize",12);
+						if(weekName[index]=="日"){
+							lab.setStyle("color","red");
+						}
+						hBox.addChild(lab);
+					}
+					pop.addChild(hBox);
+					function flushDays(nowTime:Date):TileList
+					{
+						var tmpDate:Date=new Date(nowTime.fullYear, nowTime.month + 1, 0);
+						var sumDay:Number=tmpDate.date;
+
+						var firstDay:Date=new Date(nowTime.fullYear, nowTime.month, 1);
+						var wday:Number=firstDay.day;
+
+						var todayNum:Number=nowTime.date;
+
+						var rowNum:uint=Math.ceil((sumDay + wday) / 7);
+						//Alert.show(Math.round((sumDay+day)/7).toString());
+
+						var tileList:TileList=new TileList();
+						tileList.setStyle("borderColor", "#FFFFFF");
+						tileList.setStyle("fontSize", 10);
+						tileList.columnCount=7;
+						tileList.rowCount=rowNum;
+						tileList.width=7 * 25;
+						tileList.height=rowNum * 25;
+
+						var myDP:Array=new Array();
+						for (var i:Number=0; i < sumDay; i++)
+						{
+							myDP.push((i + 1).toString());
+						}
+						for (i=0; i < wday; i++)
+						{
+							myDP.unshift(null);
+						}
+
+						tileList.dataProvider=myDP;
+						tileList.selectedIndex=wday + todayNum - 1;
+
+						tileList.addEventListener(ListEvent.ITEM_CLICK, testHandler);
+						return tileList;
+					}
+
+					var tileList1:TileList = flushDays(nowTime);
+					var hBoxMiddle:HBox = new HBox();
+					hBoxMiddle.width = 7*25 + 4;
+					hBoxMiddle.height = 6 * 25 + 4;
+					hBoxMiddle.setStyle("horizontalAlign","center");
+					hBoxMiddle.setStyle("borderColor","#B2B2B2");
+					hBoxMiddle.setStyle("borderStyle","solid");
+					hBoxMiddle.addChild(tileList1);
+					
+					pop.addChild(hBoxMiddle);
+					
+					var hBoxBottom:HBox = new HBox();
+					hBoxBottom.width = m_width;
+					hBoxBottom.setStyle("horizontalAlign","right");
+					
+					var hour:NumericStepper = new NumericStepper();
+					hour.setStyle("fontSize",10);
+					hour.stepSize = 1;
+					hour.minimum = 0;
+					hour.maximum = 23;
+					hour.width = 50;
+					hour.height = 20;
+					hour.value = new Date().hours;
+					hour.setStyle("paddingRight",0);
+					hour.addEventListener(NumericStepperEvent.CHANGE,hourChangeHandler);
+					var h_label:Label = new Label();
+					h_label.text = "时";
+					h_label.setStyle("textAlign","center");
+					h_label.width = 15;
+					
+					var minute:NumericStepper = new NumericStepper();
+					minute.setStyle("fontSize",10);
+					minute.stepSize = 1;
+					minute.minimum = 0;
+					minute.maximum = 59;
+					minute.width = 50;
+					minute.height = 20;
+					minute.value = new Date().minutes;
+					minute.addEventListener(NumericStepperEvent.CHANGE,minuteChangeHandler);
+					var mi_label:Label = new Label();
+					mi_label.text = "分";
+					mi_label.setStyle("textAlign","center");
+					mi_label.width = 15;
+					
+//					var subBtn:Button = new Button();
+//					subBtn.width = 40;
+//					subBtn.label = "确定";
+					
+					hBoxBottom.addChild(hour);
+					hBoxBottom.addChild(h_label);
+					hBoxBottom.addChild(minute);
+					hBoxBottom.addChild(mi_label);
+//					hBoxBottom.addChild(subBtn);
+					pop.addChild(hBoxBottom);
+					isOpen = true;
+				}else{
+					PopUpManager.removePopUp(pop as IFlexDisplayObject);
+					isOpen = false;
+				}
+			}
+			
+			private function closeHandler(event:CloseEvent):void{
+				PopUpManager.removePopUp(event.target as IFlexDisplayObject);
+				isOpen = false;
+			}
+			
+			private function handleMouseDownOutside(event:FlexMouseEvent):void
+			{
+				PopUpManager.removePopUp(event.target as IFlexDisplayObject);
+				isOpen = false;
+			}
+			
+			public function set text(str:String):void{
+				initvalue = str ;
+			}
+			
+			public function get text():String{
+				return returnTime.text ;
+			}
+			
+			public function set editable(str:Boolean):void{
+				initeditable = str;
+			}
+			
+			public function get editable(): Boolean{
+				return returnTime.editable;
+			}
+		]]>
+	</mx:Script>
+</mx:Module>

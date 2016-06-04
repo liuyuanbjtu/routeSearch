@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Text xmlns:mx="http://www.adobe.com/2006/mxml"
+		  text="{routeText}"
+		  color="#709ede"
+		  fontSize="15"
+		  fontWeight="bold"
+		  textDecoration="normal"
+		  fontStyle="normal" leading="4">
+	<mx:Script>
+		<![CDATA[
+			[Bindable]
+			public var routeText:String = "";
+		]]>
+	</mx:Script>
+</mx:Text>

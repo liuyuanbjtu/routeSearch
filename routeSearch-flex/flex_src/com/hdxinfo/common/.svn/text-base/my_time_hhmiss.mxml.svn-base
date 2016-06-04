@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml"
+		 width="100%">
+	<!--
+		 自定义时分秒控件
+		 getstring() 方法返回数组(时,分,秒)
+		 setstring("","","") 方法传参数,分别赋值 时分秒.
+	-->
+	<mx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			public var cont:ArrayCollection;
+
+			public function getstring():ArrayCollection
+			{
+				var hour_my:String=this.hours.value.toString();
+				var minut_my:String=this.minut.value.toString();
+				var secod_my:String=this.secod.value.toString();
+				cont=new ArrayCollection();
+				cont.addItem(hour_my); //  向数组里添加小时
+				cont.addItem(minut_my); //向数组里添加分钟
+				cont.addItem(secod_my); // 秒
+				return cont;
+			}
+			
+			public function setstring(shi:String , fen:String , miao:String):void{
+				this.hours.value =  7; 
+				this.minut.value =  0; 
+				this.secod.value =  0; 
+//				this.hours.value =  Number(shi); 
+//				this.minut.value =  Number(fen); 
+//				this.secod.value =  Number(miao); 
+			}
+		]]>
+	</mx:Script>
+
+	<mx:HBox width="100%">
+		<mx:NumericStepper id="hours"
+						   width="45"
+						   minimum="0"
+						   maximum="23"/>
+		<mx:Label text=":"
+				  width="7"/>
+		<mx:NumericStepper id="minut"
+						   width="45"
+						   minimum="0"
+						   maximum="59"/>
+		<mx:Label text=":"
+				  width="7"/>
+		<mx:NumericStepper id="secod"
+						   width="45"
+						   minimum="0"
+						   maximum="59"/>
+	</mx:HBox>
+</mx:HBox>

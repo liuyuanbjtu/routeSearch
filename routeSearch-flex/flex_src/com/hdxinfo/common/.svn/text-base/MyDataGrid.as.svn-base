@@ -1,0 +1,70 @@
+package cn.com.common
+{
+	import mx.collections.ArrayCollection;
+	import mx.controls.Alert;
+	import mx.controls.DataGrid;
+
+	public class MyDataGrid extends DataGrid
+	{
+		protected var arrColl:ArrayCollection=null; //保存被选中的信息   
+
+		public function MyDataGrid()
+		{
+			super();
+			arrColl=new ArrayCollection();
+		}
+
+
+		public function get listRendererArray():Array
+		{
+			return listItems;
+		}
+
+		//选中   
+		public function addToSelected(item:Object):void
+		{
+
+			if (arrColl.getItemIndex(item) < 0)
+			{
+				arrColl.addItem(item);
+			}
+		}
+
+		//取消   
+		public function delFromSelected(item:Object):void
+		{
+
+			if (arrColl.getItemIndex(item) > -1)
+			{
+				arrColl.removeItemAt(arrColl.getItemIndex(item));
+			}
+		}
+
+		//可判断是否被选中   
+		public function isInSelected(item:Object):Boolean
+		{
+
+			if (arrColl.getItemIndex(item) < 0)
+			{
+				return false;
+			}
+			else
+			{
+				return true;
+			}
+		}
+
+		//获取被选中的信息
+		public function getSelected():ArrayCollection
+		{
+			return arrColl;
+		}
+
+		//删除选择集合中的所有的值
+		public function cancleSelected():void
+		{
+			arrColl.removeAll();
+		}
+	}
+
+}

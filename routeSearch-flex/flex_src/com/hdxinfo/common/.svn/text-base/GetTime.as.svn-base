@@ -1,0 +1,47 @@
+package cn.com.common
+{
+
+	public class GetTime
+	{
+		public function GetTime()
+		{
+		}
+
+		public function systemTime():String
+		{
+			var timeNow:String;
+			var year:String;
+			var month:String;
+			var day:String;
+			var hour:String;
+			var minute:String;
+			var second:String;
+
+			year=new Date().getFullYear().toString();
+			month=addZero((new Date().getMonth() + 1).toString());
+			day=addZero(new Date().getDate().toString());
+			hour=addZero(new Date().getHours().toString());
+			minute=addZero(new Date().getMinutes().toString());
+			second=addZero(new Date().getSeconds().toString());
+
+			timeNow=year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second;
+
+			return timeNow;
+		}
+
+//时间不足两位时前面补“0”
+		private function addZero(str:String):String
+		{
+			var strNew:String;
+			if (str.length == 1)
+			{
+				strNew="0" + str;
+			}
+			else
+			{
+				strNew=str;
+			}
+			return strNew;
+		}
+	}
+}

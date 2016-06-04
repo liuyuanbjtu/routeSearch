@@ -1,0 +1,51 @@
+package cn.com.common
+{
+	import flash.display.DisplayObject;
+	import flash.events.MouseEvent;
+
+	import mx.collections.IList;
+	import mx.containers.ViewStack;
+	import mx.controls.TabBar;
+	import mx.core.*;
+	use namespace mx_internal;
+
+	public class RichTabBar extends TabBar
+	{
+		use namespace mx_internal;
+
+		public function RichTabBar()
+		{
+			super();
+			navItemFactory=new ClassFactory(RichTab);
+		}
+
+		override protected function createNavItem(label:String, icon:Class=null):IFlexDisplayObject
+		{
+			var tab:RichTab=super.createNavItem(label, icon) as RichTab;
+			tab.addEventListener(RichTab.CLOSE_TAB, onClickHandler);
+			return tab;
+		}
+
+		override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void
+		{
+			super.updateDisplayList(unscaledWidth, unscaledHeight);
+		}
+
+		private function onClickHandler(event:MouseEvent):void
+		{
+			var index:int=getChildIndex(DisplayObject(event.currentTarget));
+			if (dataProvider is IList)
+			{
+				dataProvider.removeItemAt(index);
+			}
+			else if (dataProvider is ViewStack)
+			{
+				var vStack:ViewStack=ViewStack(this.dataProvider);
+				var child:DisplayObject=vStack.getChildAt(index);
+				vStack.removeChild(child);
+			}
+		}
+	}
+
+
+}

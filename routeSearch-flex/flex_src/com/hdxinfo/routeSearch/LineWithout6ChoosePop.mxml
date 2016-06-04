@@ -1,0 +1,381 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"
+		   width="134"
+		   height="256"
+		   fontSize="12"
+		   fontFamily="Arial"
+		   fontWeight="normal"
+		   backgroundColor="#FFFFFF"
+		   backgroundAlpha="1"
+		   mouseDownOutside="PopUpManager.removePopUp(this)">
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.controls.Label;
+			import mx.managers.PopUpManager;
+			
+			public var routeSearch:RouteSearch;
+			
+			private function clickHandler(flag:int):void
+			{
+				routeSearch.chooseLine(flag);
+				PopUpManager.removePopUp(this);
+			}
+		]]>
+	</mx:Script>
+	<mx:Box x="5"
+			y="3"
+			width="123"
+			height="22"
+			borderColor="#2571b7"
+			borderStyle="solid"
+			cornerRadius="3"
+			verticalAlign="middle"
+			horizontalAlign="center">
+		<mx:Label text="全部线路"
+				  color="#2571b7"
+				  width="122"
+				  height="22"
+				  textAlign="center"
+				  mouseChildren="false"
+				  buttonMode="true"
+				  useHandCursor="true"
+				  click="clickHandler(0)"/>
+	</mx:Box>
+	
+	<mx:Box x="5"
+			y="27"
+			width="60"
+			height="22"
+			borderColor="#F9E103"
+			borderStyle="solid"
+			backgroundColor="#F9E103"
+			cornerRadius="3"
+			verticalAlign="middle"
+			horizontalAlign="center">
+		<mx:Label text="1号线"
+				  width="59"
+				  height="22"
+				  textAlign="center"
+				  color="#FFFFFF"
+				  mouseChildren="false"
+				  buttonMode="true"
+				  useHandCursor="true"
+				  click="clickHandler(1)"/>
+	</mx:Box>
+	
+	<mx:Box x="70"
+			y="28"
+			width="60"
+			height="22"
+			backgroundColor="#0066CC"
+			borderColor="#0066CC"
+			borderStyle="solid"
+			cornerRadius="5"
+			verticalAlign="middle"
+			horizontalAlign="center">
+		<mx:Label text="2号线"
+				  width="59"
+				  height="22"
+				  textAlign="center"
+				  color="#FFFFFF"
+				  mouseChildren="false"
+				  buttonMode="true"
+				  useHandCursor="true"
+				  click="clickHandler(2)"/>
+	</mx:Box>
+	
+	<mx:Box x="5"
+			y="53"
+			width="60"
+			height="22"
+			backgroundColor="#EA6632"
+			borderColor="#EA6632"
+			borderStyle="solid"
+			cornerRadius="5"
+			verticalAlign="middle"
+			horizontalAlign="center">
+		<mx:Label text="4号线"
+				  width="59"
+				  height="22"
+				  textAlign="center"
+				  color="#FFFFFF"
+				  mouseChildren="false"
+				  buttonMode="true"
+				  useHandCursor="true"
+				  click="clickHandler(3)"/>
+	</mx:Box>
+	
+	<mx:Box x="70"
+			y="53"
+			width="60"
+			height="22"
+			backgroundColor="#009900"
+			borderColor="#009900"
+			borderStyle="solid"
+			cornerRadius="5"
+			verticalAlign="middle"
+			horizontalAlign="center">
+		<mx:Label text="5号线"
+				  width="59"
+				  height="22"
+				  textAlign="center"
+				  color="#FFFFFF"
+				  mouseChildren="false"
+				  buttonMode="true"
+				  useHandCursor="true"
+				  click="clickHandler(4)"/>
+	</mx:Box>
+	
+	<mx:Box x="5"
+			y="77"
+			width="60"
+			height="22"
+			backgroundColor="#FF0000"
+			borderColor="#FF0000"
+			borderStyle="solid"
+			cornerRadius="5"
+			verticalAlign="middle"
+			horizontalAlign="center">
+		<mx:Label text="6号线"
+				  width="59"
+				  height="22"
+				  textAlign="center"
+				  color="#FFFFFF"
+				  mouseChildren="false"
+				  buttonMode="true"
+				  useHandCursor="true"
+				  click="clickHandler(5)"/>
+	</mx:Box>
+	
+	<mx:Box x="70"
+			y="78"
+			width="60"
+			height="22"
+			backgroundColor="#00A1CC"
+			borderColor="#00A1CC"
+			borderStyle="solid"
+			cornerRadius="5"
+			verticalAlign="middle"
+			horizontalAlign="center">
+		<mx:Label text="8号线"
+				  width="59"
+				  height="22"
+				  textAlign="center"
+				  color="#FFFFFF"
+				  mouseChildren="false"
+				  buttonMode="true"
+				  useHandCursor="true"
+				  click="clickHandler(6)"/>
+	</mx:Box>
+	
+	<mx:Box x="5"
+			y="103"
+			width="60"
+			height="22"
+			backgroundColor="#EA6632"
+			borderColor="#EA6632"
+			borderStyle="solid"
+			cornerRadius="5"
+			verticalAlign="middle"
+			horizontalAlign="center">
+		<mx:Label text="9号线"
+				  width="59"
+				  height="22"
+				  textAlign="center"
+				  color="#FFFFFF"
+				  mouseChildren="false"
+				  buttonMode="true"
+				  useHandCursor="true"
+				  click="clickHandler(7)"/>
+	</mx:Box>
+	
+	<mx:Box x="70"
+			y="103"
+			width="60"
+			height="22"
+			backgroundColor="#00A1CB"
+			borderColor="#00A1CB"
+			borderStyle="solid"
+			cornerRadius="5"
+			verticalAlign="middle"
+			horizontalAlign="center">
+		<mx:Label text="10号线"
+				  width="59"
+				  height="22"
+				  textAlign="center"
+				  color="#FFFFFF"
+				  mouseChildren="false"
+				  buttonMode="true"
+				  useHandCursor="true"
+				  click="clickHandler(8)"/>
+	</mx:Box>
+	
+	<mx:Box x="5"
+			y="127"
+			width="60"
+			height="22"
+			backgroundColor="#C9E887"
+			borderColor="#C9E887"
+			borderStyle="solid"
+			cornerRadius="5"
+			verticalAlign="middle"
+			horizontalAlign="center">
+		<mx:Label text="13号线"
+				  width="59"
+				  height="22"
+				  textAlign="center"
+				  color="#FFFFFF"
+				  mouseChildren="false"
+				  buttonMode="true"
+				  useHandCursor="true"
+				  click="clickHandler(9)"/>
+	</mx:Box>
+	
+	<mx:Box x="70"
+			y="127"
+			width="60"
+			height="22"
+			backgroundColor="#00A1CB"
+			borderColor="#00A1CB"
+			borderStyle="solid"
+			cornerRadius="5"
+			verticalAlign="middle"
+			horizontalAlign="center">
+		<mx:Label text="14号线"
+				  width="59"
+				  height="22"
+				  textAlign="center"
+				  color="#FFFFFF"
+				  mouseChildren="false"
+				  buttonMode="true"
+				  useHandCursor="true"
+				  click="clickHandler(10)"/>
+	</mx:Box>
+	
+	<mx:Box x="5"
+			y="153"
+			width="60"
+			height="22"
+			backgroundColor="#C9E887"
+			borderColor="#C9E887"
+			borderStyle="solid"
+			cornerRadius="5"
+			verticalAlign="middle"
+			horizontalAlign="center">
+		<mx:Label text="15号线"
+				  width="59"
+				  height="22"
+				  textAlign="center"
+				  color="#FFFFFF"
+				  mouseChildren="false"
+				  buttonMode="true"
+				  useHandCursor="true"
+				  click="clickHandler(11)"/>
+	</mx:Box>
+	
+	<mx:Box x="70"
+			y="153"
+			width="60"
+			height="22"
+			backgroundColor="#00A1CB"
+			borderColor="#00A1CB"
+			borderStyle="solid"
+			cornerRadius="5"
+			verticalAlign="middle"
+			horizontalAlign="center">
+		<mx:Label text="八通线"
+				  width="59"
+				  height="22"
+				  textAlign="center"
+				  color="#FFFFFF"
+				  mouseChildren="false"
+				  buttonMode="true"
+				  useHandCursor="true"
+				  click="clickHandler(12)"/>
+	</mx:Box>
+	
+	<mx:Box x="5"
+			y="177"
+			width="60"
+			height="22"
+			backgroundColor="#C9E887"
+			borderColor="#C9E887"
+			borderStyle="solid"
+			cornerRadius="5"
+			verticalAlign="middle"
+			horizontalAlign="center">
+		<mx:Label text="昌平线"
+				  width="59"
+				  height="22"
+				  textAlign="center"
+				  color="#FFFFFF"
+				  mouseChildren="false"
+				  buttonMode="true"
+				  useHandCursor="true"
+				  click="clickHandler(13)"/>
+	</mx:Box>
+	<mx:Box x="70"
+			y="177"
+			width="60"
+			height="22"
+			backgroundColor="#00A1CB"
+			borderColor="#00A1CB"
+			borderStyle="solid"
+			cornerRadius="5"
+			verticalAlign="middle"
+			horizontalAlign="center">
+		<mx:Label text="房山线"
+				  width="59"
+				  height="22"
+				  textAlign="center"
+				  color="#FFFFFF"
+				  mouseChildren="false"
+				  buttonMode="true"
+				  useHandCursor="true"
+				  click="clickHandler(14)"/>
+	</mx:Box>
+	
+	<mx:Box x="5"
+			y="203"
+			width="60"
+			height="22"
+			backgroundColor="#C9E887"
+			borderColor="#C9E887"
+			borderStyle="solid"
+			cornerRadius="5"
+			verticalAlign="middle"
+			horizontalAlign="center">
+		<mx:Label text="机场线"
+				  width="59"
+				  height="22"
+				  textAlign="center"
+				  color="#FFFFFF"
+				  mouseChildren="false"
+				  buttonMode="true"
+				  useHandCursor="true"
+				  click="clickHandler(15)"/>
+	</mx:Box>
+	
+	<mx:Box x="70"
+			y="203"
+			width="60"
+			height="22"
+			backgroundColor="#00A1CB"
+			borderColor="#00A1CB"
+			borderStyle="solid"
+			cornerRadius="5"
+			verticalAlign="middle"
+			horizontalAlign="center">
+		<mx:Label text="亦庄线"
+				  width="59"
+				  height="22"
+				  textAlign="center"
+				  color="#FFFFFF"
+				  mouseChildren="false"
+				  buttonMode="true"
+				  useHandCursor="true"
+				  click="clickHandler(16)"/>
+	</mx:Box>
+	
+</mx:Canvas>

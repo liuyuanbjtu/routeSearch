@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml"
+		 width="100%">
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.managers.PopUpManager;
+			[Bindable]
+			public var totalTime:Number = 0;
+			
+			[Bindable]
+			public var waitTime:Number = 0;
+			
+			[Bindable]
+			public var costSat:Number = 0;
+			
+			[Bindable]
+			public var costSatArray:ArrayCollection= new ArrayCollection();
+//			public var obj:Object;
+			[Bindable]
+			public var cost:Object;
+			
+			[Bindable]
+			public var costCollection:ArrayCollection = new ArrayCollection();
+			
+			private function openLineChart():void 
+			{ 
+				// 创建弹出窗体 
+				var pop:LineChart = LineChart(PopUpManager.createPopUp(this, LineChart, true)); 
+				//var pop : MyTitleWindow= MyTitleWindow(PopUpManager.createPopUp(this,MyTitleWindow,true));
+	//			pop.costSatArrayCollection=costSatArray;
+			//	pop.Array = costSatArray;
+//				pop.costSatArrayCollection.addItem(obj);
+				//循环取出costSatArray中的每一个元素，作为cost对象的属性
+				
+//				
+			
+
+//					var cost:Object = new Object();
+//					//cost.index = satObj.index;
+//					var i:int = 0;
+//					var costCollection111 = new ArrayCollection();
+//					
+//					for each(var item:Number in costSatArray){
+//						var cost111:Object = new Object();
+//						if(item!=0){
+//							cost111.strTime = returnTime(i);
+//							cost111.costSat = Math.round(item*100)/100;
+//							costCollection111.addItem(cost111);
+//						}
+//						i=i+1;
+//					}
+//					
+//			//	}
+//				
+				
+				pop.costSatArrayCollection = costSatArray;
+				
+				PopUpManager.centerPopUp(pop);
+			}
+			
+			private function returnTime(i:int):String{
+				var strTime:String;
+				var hour:int;
+				var min:int;
+				hour = Math.floor(i/12);
+				min = (i%12)*5;
+				if(min<10){
+					strTime = hour+":"+"0"+min;
+				}
+				else{
+					strTime = hour+":"+min;
+				}
+				return strTime;
+			}
+		]]>
+	</mx:Script>
+	<mx:Label text="行程时间：{totalTime} 分钟 "
+			  fontSize="12"/>
+	<mx:Label text="满意度指数：{costSat} 分 "
+			  fontSize="12"/>
+	<mx:Button click="openLineChart()" x="220" y="75"   
+			   fontSize="12" label=" 满意度" />  
+
+</mx:HBox>

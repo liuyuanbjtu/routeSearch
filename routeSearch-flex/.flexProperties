@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<flexProperties enableServiceManager="false" flexServerFeatures="4" flexServerType="2" serverContextRoot="/routeSearch" serverRoot="D:/Program Files/Apache Software Foundation/apache-tomcat-6.0.44/webapps/routeSearch/" serverRootURL="http://localhost:8080/routeSearch" toolCompile="true" useServerFlexSDK="false" version="2"/>

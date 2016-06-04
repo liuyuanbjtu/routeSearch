@@ -1,0 +1,16 @@
+package cn.com.common
+{
+	import flash.events.Event;
+	public class PageChangeEvent extends Event
+	{
+		private var _pageIndex:int;
+		private var _pageSize:int;
+		public static const CHANGED:String="PageChange";
+		public function PageChangeEvent(type:String, pageIndex:int, pageSize:int)
+		{
+			super(type);
+			_pageIndex=pageIndex;
+			_pageSize=pageSize;
+		}
+	}
+}

@@ -1,0 +1,181 @@
+/* CSS file */
+MenuBar {
+   fillAlphas: 0, 0;
+}
+Button.btnl
+{
+	downSkin: Embed(source="../assets/cx.jpg");
+	upSkin: Embed(source="../assets/cx.jpg");
+	overSkin: Embed(source="../assets/cx.jpg");
+	disabledSkin: Embed(source="../assets/cx.jpg");
+	selectedUpSkin: Embed(source="../assets/cx.jpg");
+	selectedOverSkin: Embed(source="../assets/cx.jpg");
+	selectedDownSkin: Embed(source="../assets/cx.jpg");
+	selectedDisabledSkin: Embed(source="../assets/cx.jpg");
+}
+
+AmLegends
+{
+	fontSize: 12;
+}
+Alert
+{
+	 backgroundColor:#FFFFFF; 
+     backgroundAlpha: 1.0; 
+     color: #323232; 
+     borderColor: #7CBCEC;             
+
+     headerHeight:20; 
+
+     headerColors:#7CBCEC,#2C56B3;             
+     dropShadowColor:#e1e1e1; 
+     themeColor: #7CBCEC; 
+     modalTransparencyColor: #ffffff; 
+      
+     dropShadowEnable:true; 
+     
+     borderThicknessLeft:1; 
+     borderThicknessRight:1; 
+     borderThicknessBottom:1; 
+     
+     paddingBottom: 18;
+     messageStyleName:alertMessage; 
+     titleStyleName:alertTitle; 
+     buttonStyleName: alertButton;
+     width:200;
+	 fontSize: 12;
+}
+
+TitleWindow
+{
+    borderStyle: none;
+    borderColor:#173B83;
+	borderStyle:solid;
+	borderThickness:2;
+	cornerRadius:8;
+	backgroundColor:#FFFFFF;
+}
+ComboBox
+{
+	fontSize: 12;
+	cornerRadius: 0;
+}
+RadioButton.blod
+{
+	 fontWeight:bold;
+}
+RadioButton.normal
+{
+	 fontWeight:normal;
+}
+
+
+AdvancedDataGrid
+{
+	color: #000000;
+	selectionColor: #D7EDFF;
+	alternatingItemColors:#FFFFFF, #F7F7F7;
+	rollOverColor: #ffcc33;
+	fontWeight: normal;
+	fontSize:12;
+	headerHeight: 30;
+	textAlign: center;
+	headerColors: #0099cc, #e6eeee;
+	selectionColor: #3399ff;
+}
+Button
+{
+   cornerRadius: 0;
+   fillAlphas: 0.5, 0.5, 0.5, 0.5;
+   color: #000000;
+   textRollOverColor: #ff0000;
+   borderColor: #33ccff;
+   themeColor: #33ccff;
+   fontSize: 12;
+}
+Label
+{
+	fontSize: 12;
+}
+Text
+{
+	fontSize: 12;
+}
+ToolTip
+{
+	fontSize: 12;
+}
+Panel {
+   borderThicknessLeft: 4;
+   borderThicknessTop: 0;
+   borderThicknessBottom: 4;
+   borderThicknessRight: 4;
+   roundedBottomCorners: false;
+   cornerRadius: 0;
+   headerHeight: 28;
+   highlightAlphas: 0, 0;
+   dropShadowEnabled: true;
+   titleStyleName: "mypanelTitle";
+}
+.mt{
+	fontSize: 12;
+}
+.mypanelTitle {
+   fontSize: 12;
+}
+Tree
+{
+	fontSize: 12;
+}
+TextInput
+{
+	fontSize: 12;
+}
+DataGrid
+{
+	color: #000000;
+	selectionColor: #D7EDFF;
+	alternatingItemColors:#FFFFFF, #F7F7F7;
+	rollOverColor: #ffcc33;
+	fontWeight: normal;
+	fontSize:12;
+	headerHeight: 30;
+	textAlign: center;
+	headerColors: #0099cc, #e6eeee;
+	selectionColor: #3399ff;
+}
+.dataGridHeader
+{
+	color: #000000;
+	fontWeight: bold;
+	height:20;
+	textAlign: center;
+	fontSize:12;
+} 
+TextArea
+{
+	fontSize: 12;
+}
+LinkButton.select {
+   color: #A00D00;
+  
+}
+LinkButton.noselect {
+   color: #FFFFFF;
+  
+}
+
+
+@font-face
+{
+	fontFamily: "Arial Black";
+	fontWeight: normal;
+	fontStyle: normal;
+	src: local("Arial Black");
+}
+.listVerticalScrollBar
+{
+}
+
+
+

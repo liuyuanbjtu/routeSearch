@@ -1,0 +1,19 @@
+package cn.com.common
+{
+	import com.amcharts.AmSerialChart;
+
+	public class AmSerialCharts extends AmSerialChart
+	{
+		override protected function createChildren():void
+		{
+			super.createChildren();
+			if (_amchartsLink)
+			{
+				_amchartsLink.alpha=0;
+				_amchartsLink.width=0;
+				_amchartsLink.height=0;
+			}
+			return;
+		}
+	}
+}

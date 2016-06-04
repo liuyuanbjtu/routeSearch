@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"
+		   width="100%"
+		   fontFamily="微软雅黑"
+		   fontSize="11"
+		   creationComplete="init()" currentState="outline">
+	<mx:states>
+		<mx:State name="outline">
+			<mx:RemoveChild target="{vbox}"/>
+		</mx:State>
+	</mx:states>
+	<mx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.controls.Label;
+			[Bindable]
+			public var crossStationNum:int;
+			public var itemArr:ArrayCollection = new ArrayCollection();
+			
+			private function init():void
+			{
+				for(var i:int = 0; i < itemArr.length; i++)
+				{
+					var label:Label = new Label();
+					label.text = itemArr[i];
+					label.setStyle("color","#0000FF");
+					vbox.addChild(label);
+				}
+			}
+			
+			private function showDetail(event:MouseEvent):void
+			{
+				var btn:LinkButton = LinkButton(event.currentTarget);
+				
+				if(btn.label == "详情")
+				{
+					btn.label = "收起";
+					currentState = null;
+				}
+				else if(btn.label == "收起")
+				{
+					btn.label = "详情";
+					currentState = "outline";
+				}
+			}
+		]]>
+	</mx:Script>
+	<mx:VBox width="100%">
+		<mx:Canvas width="100%">
+			<mx:Label x="0"
+					  y="0"
+					  text="经过"/>
+			<mx:Label x="28"
+					  y="0"
+					  text="{crossStationNum}"
+					  color="#FF0000"
+					  textAlign="center"/>
+			<mx:Label x="51"
+					  y="0"
+					  text="站"/>
+					  
+			<mx:LinkButton label="详情"
+					  fontFamily="微软雅黑"
+					  fontSize="11"
+					  click="showDetail(event)"
+					  id="label1"
+					  right="5"/>
+		</mx:Canvas>
+		<mx:VBox width="100%" id="vbox">
+			
+		</mx:VBox>
+	</mx:VBox>
+</mx:Canvas>

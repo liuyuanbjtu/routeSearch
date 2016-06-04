@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"
+		   width="20"
+		   height="20"
+		   borderColor="#FFFFFF"
+		   borderStyle="solid"
+		   cornerRadius="5"
+		   backgroundColor="#709ede">
+	
+	<mx:Script>
+		<![CDATA[
+			[Bindable]
+			public var text:String = "";
+		]]>
+	</mx:Script>
+	<mx:Label color="#FFFFFF"
+			  text="{text}"
+			  textAlign="center"
+			  fontWeight="bold"
+			  fontFamily="Arial"
+			  fontSize="12"
+			  x="-1"
+			  y="-1"/>
+</mx:Canvas>

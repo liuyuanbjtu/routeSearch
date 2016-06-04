@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>  
+<mx:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+				xmlns:s="library://ns.adobe.com/flex/spark" 
+				xmlns:mx="library://ns.adobe.com/flex/mx"
+				width="120%" height="289" fontSize="12"
+				fontFamily="微软雅黑">  
+
+	 
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.graphics.Stroke;
+			import mx.managers.PopUpManager;
+			public var costSatArrayCollection:ArrayCollection;
+			private function close():void
+			{
+				PopUpManager.removePopUp(this);
+			}
+		]]>
+	</fx:Script>
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.events.FlexEvent;
+			[Bindable]
+			//折线图数据绑定
+		
+			private var chartArray:ArrayCollection = new ArrayCollection([
+				{time:"0",normal:"6",suddenly:"7",suddenlyno:"6"},
+				{time:"5",normal:"5",suddenly:"4",suddenlyno:"5"},
+				{time:"15",normal:"4",suddenly:"4",suddenlyno:"3"},
+				{time:"20",normal:"3",suddenly:"2",suddenlyno:"1"},
+				{time:"25",normal:"2",suddenly:"1",suddenlyno:"1"}
+			]);	
+			private var chartArray1:ArrayCollection = new ArrayCollection	
+		
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+	</fx:Declarations>
+	
+
+	
+	<mx:VBox width="100%" height="100%" paddingBottom="10" paddingLeft="10" paddingRight="20" 
+			 paddingTop="10">
+		<mx:LineChart id="line" dataProvider="{costSatArrayCollection}" width="100%" height="100%" showDataTips="true">
+			<mx:horizontalAxis>
+				<mx:CategoryAxis displayName="时间"  categoryField="strTime"/>
+			</mx:horizontalAxis> 
+			<mx:series>
+				<mx:LineSeries  id="lineSeries1"  displayName="正常情况" xField="strTime" yField="costSat"/>
+				<mx:LineSeries  id="lineSeries2"  displayName="突发无调度" xField="strTime" yField="costSat1"/>
+				<mx:LineSeries  id="lineSeries3"  displayName="突发有调度" xField="strTime" yField="costSat2"/>
+				
+			</mx:series>
+		</mx:LineChart>
+		<mx:HBox width="100%" height="30">
+			<mx:Label width="48%"/>
+			<mx:Legend dataProvider="{line}"/>
+		</mx:HBox>
+	</mx:VBox>
+	
+	<mx:FormItem>  
+		<mx:Button click="close()"  id="btnLogin" label="关闭" fontSize="12"/>  
+
+	</mx:FormItem> 
+	
+</mx:TitleWindow>  

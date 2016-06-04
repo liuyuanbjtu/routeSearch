@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml">
+	<mx:Script>
+		<![CDATA[
+			[Bindable]
+			public var mouseoverimg:String="";
+			[Bindable]
+			public var defaultimg:String="";
+			[Bindable]
+			public var clickimg:String="";
+		]]>
+	</mx:Script>
+	<mx:Image x="0"
+			  y="0"
+			  id="myimg3"
+			  source="{clickimg}">
+	</mx:Image>
+	<mx:Image x="0"
+			  y="0"
+			  id="myimg2"
+			  source="{mouseoverimg}">
+	</mx:Image>
+	<mx:Image x="0"
+			  y="0"
+			  id="myimg"
+			  source="{defaultimg}"
+			  mouseDown="{myimg.alpha = 0;myimg2.alpha = 0}"
+			  mouseUp="{myimg.alpha = 1;myimg2.alpha = 1}"
+			  mouseOver="{myimg.alpha = 0}"
+			  mouseOut="{myimg.alpha = 1}"
+			  mouseChildren="false"
+			  buttonMode="true">
+	</mx:Image>
+
+</mx:Canvas>

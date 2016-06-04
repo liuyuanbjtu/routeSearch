@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" showCloseButton="true" close="Close()" 
+				title="窗内网" fontSize="12" width="532" height="516" layout="absolute">
+	<mx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.managers.PopUpManager;
+			
+			[Bindable]
+//			public var costSatArray:Array = [1,2,3,3,5,5];
+			
+			[Bindable]
+//			public var costSatArrayCollection:ArrayCollection = new ArrayCollection(costSatArray);	
+			public var costSatArrayCollection:ArrayCollection;
+			
+			[Bindable]
+			public var dataArray:ArrayCollection=new ArrayCollection([
+				{Month:"Jan",Profit:2000,Expenses:1500,Amount:450},
+				{Month:"Feb",Profit:1000,Expenses:200,Amount:600},
+				{Month:"Mar",Profit:1500,Expenses:500,Amount:300}
+			]);
+			internal function Close():void{
+				PopUpManager.removePopUp(this);
+			}
+		]]>
+	</mx:Script>
+	
+	<mx:VBox width="100%" height="100%" paddingBottom="10" paddingLeft="10" paddingRight="20" 
+			 paddingTop="10">
+		<mx:LineChart id="line" dataProvider="{costSatArrayCollection}" width="100%" height="100%" showDataTips="true">
+			<mx:series>
+				<mx:LineSeries  id="lineSeries"  displayName="满意度指数" xField="num" yField="costSat"/>  
+			</mx:series>
+		</mx:LineChart>
+		<mx:HBox width="100%" height="30">
+			<mx:Label width="48%"/>
+			<mx:Legend dataProvider="{line}"/>
+		</mx:HBox>
+	</mx:VBox>
+		
+</mx:TitleWindow>

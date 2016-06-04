@@ -1,0 +1,61 @@
+package cn.com.common
+{
+	import flash.events.Event;
+	import flash.events.MouseEvent;
+
+	import mx.controls.Alert;
+	import mx.controls.Button;
+	import mx.controls.tabBarClasses.Tab;
+	import mx.core.*;
+	use namespace mx_internal;
+
+	public class RichTab extends Tab
+	{
+		public static const CLOSE_TAB:String="Close_Tab";
+		private var btn_Close:Button;
+
+		public function RichTab()
+		{
+			super();
+			this.mouseChildren=true;
+		}
+
+		override protected function createChildren():void
+		{
+			super.createChildren();
+			this.btn_Close=new Button();
+			this.btn_Close.width=15;
+			this.btn_Close.height=15;
+			this.btn_Close.toolTip="Close this Tab";
+			this.btn_Close.name="closeButton";
+			this.btn_Close.addEventListener(MouseEvent.CLICK, onClickHandler);
+			this.addChild(this.btn_Close);
+		}
+
+		override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void
+		{
+			super.updateDisplayList(unscaledWidth, unscaledHeight);
+			this.setChildIndex(this.btn_Close, this.numChildren - 1);
+			if (this.selected)
+			{
+				this.btn_Close.visible=true;
+				this.btn_Close.enabled=true;
+			}
+			else
+			{
+				this.btn_Close.visible=false;
+				this.btn_Close.enabled=false;
+			}
+			this.btn_Close.x=unscaledWidth - this.btn_Close.width - 4;
+			this.btn_Close.y=4;
+		}
+
+		private function onClickHandler(event:MouseEvent):void
+		{
+			this.dispatchEvent(new MouseEvent(RichTab.CLOSE_TAB));
+			event.stopImmediatePropagation();
+		}
+	}
+
+
+}

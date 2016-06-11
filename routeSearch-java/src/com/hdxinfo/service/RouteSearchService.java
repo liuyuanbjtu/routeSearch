@@ -137,6 +137,7 @@ public class RouteSearchService {
 					
 					//计算路径满意度,存放在Route类中int costStatisfaction[24*12] 
 					route.costSatisfaction = new double[3][24*12];
+					route.runSat = new double [3][24*12];
 					for(int m=0;m<3;m++)
 					computecostSat(route, m, index_t);
 					
@@ -210,6 +211,7 @@ public class RouteSearchService {
 					bean.setCostSatisfaction(route.costSatisfaction[p][index_t]);
 //					bean.setCostSatArray(route.costSatisfaction,p);
 					bean.setCostSatArray(route.costSatisfaction);
+					bean.setRunSat(route.runSat);
 //					System.out.println(route.costSatisfaction[p][index_t-1]);
 					
 					list.add(bean);
@@ -224,7 +226,7 @@ public class RouteSearchService {
 			e.printStackTrace();
 		}
 		
-		/*String outputPath = "C:\\Users\\LiuYuan\\Workspaces\\routeSearch\\routeSearch\\Data\\output.txt";
+		String outputPath = "C:\\Users\\LiuYuan\\Workspaces\\routeSearch-06-02\\routeSearch\\Data\\output.txt";
 		try {
 			FileWriter fr = new FileWriter(outputPath);
 			for(int n=0;n<3;n++){
@@ -234,11 +236,16 @@ public class RouteSearchService {
 					RouteBean rb = testobj.get(i);
 					fr.write(rb.getRouteStr()+"\n");
 					if(rb != null){
-						double[] cost = rb.getCostSatArray();
-						for(int m=0;m<cost.length;m++){
-							if(cost[m]!=0){
-								fr.write(String.valueOf((double)Math.round(100*cost[m])/100.0)+"\t");
-							}
+						double[][] cost = rb.getRunSat();
+						for(int k=0;k<3;k++){
+//							if(k==n){
+								for(int m=0;m<cost[k].length;m++){
+									if(cost[k][m]!=0){
+										fr.write(String.valueOf((double)Math.round(100*cost[k][m])/100.0)+"\t");
+									}
+								}
+//							}
+								fr.write("\n");
 						}
 					}
 					fr.write("\n");
@@ -249,7 +256,7 @@ public class RouteSearchService {
 			fr.close();
 		} catch (Exception e) {
 			// TODO: handle exception
-		}*/
+		}
 		return obj;
 	}
 	
@@ -841,6 +848,7 @@ public class RouteSearchService {
 //				if(waitSat==10){
 //					route.costSatisfaction[p][index_t] = (2.9*runSat + 2.5*transferSat + 2.5*congestionSat)/(2.9+2.5+2.5);
 //				}else{
+					route.runSat[p][index_t] = waitSat;
 					route.costSatisfaction[p][index_t] = (2.2*waitSat + 2.9*runSat + 2.5*transferSat + 2.5*congestionSat)/(2.2+2.9+2.5+2.5);
 //				}
 			}

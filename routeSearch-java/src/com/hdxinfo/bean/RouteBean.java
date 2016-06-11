@@ -18,6 +18,7 @@ public class RouteBean {
     private double temp=0;
     //路径满意度指数数组
     private double[][]  costSatArray = new double[3][24*12];
+    private double[][]  runSat = new double[3][24*12];
    // private List<Double> costSatArray = new ArrayList<Double>();
   //  private List<List<Double>> costSatArray = new ArrayList<List<Double>>();
     //private List<List<Double>> costSatArray = new ArrayList<List<Double>>();
@@ -81,6 +82,7 @@ public class RouteBean {
 	public void setCostSatisfaction(double costSatisfaction) {
 		this.costSatisfaction = costSatisfaction;
 	}
+	
 
 	/*public double[] getCostSatArray() {
 		return costSatArray;
@@ -104,6 +106,15 @@ public class RouteBean {
 			this.costSatArray=costSatArray;
 		
 	}
+	
+	public double[][] getRunSat() {
+		return runSat;
+	}
+	
+	public void setRunSat(double[][] runSat) {
+		this.runSat = runSat;
+	}
+	
 	public double getTemp() {
 		return temp;
 	}

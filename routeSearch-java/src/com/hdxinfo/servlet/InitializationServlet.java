@@ -40,11 +40,11 @@ public class InitializationServlet extends HttpServlet {
 		network.LoadTranferInfo(dataPath+ "\\WEB-INF\\classes\\com\\hdxinfo\\data\\TransferStation.txt");	
 		network.LoadTimeTableall(dataPath+ "\\WEB-INF\\classes\\com\\hdxinfo\\data\\time_table_all.txt");
 		network.loadLineTrainLimit(dataPath+ "\\WEB-INF\\classes\\com\\hdxinfo\\data\\列车定员.txt");
-*/		network.LoadStationInfo(dataPath+ "\\WEB-INF\\classes\\com\\hdxinfo\\data\\Stations_0306.txt");
-		network.LoadFiledTable(dataPath+ "\\WEB-INF\\classes\\com\\hdxinfo\\data\\区间基本数据_0306.txt");
-		network.LoadTranferInfo(dataPath+ "\\WEB-INF\\classes\\com\\hdxinfo\\data\\TransferStation_0306.txt");	
-		network.LoadTimeTableall(dataPath+ "\\WEB-INF\\classes\\com\\hdxinfo\\data\\time_table_all_0306.txt");
-		network.loadLineTrainLimit(dataPath+ "\\WEB-INF\\classes\\com\\hdxinfo\\data\\列车定员_0306.txt");
+*/		network.LoadStationInfo(dataPath+ "\\WEB-INF\\classes\\com\\hdxinfo\\data\\Stations_0608.txt");
+		network.LoadFiledTable(dataPath+ "\\WEB-INF\\classes\\com\\hdxinfo\\data\\区间基本数据_0608.txt");
+		network.LoadTranferInfo(dataPath+ "\\WEB-INF\\classes\\com\\hdxinfo\\data\\TransferStation_0608.txt");	
+		network.LoadTimeTableall(dataPath+ "\\WEB-INF\\classes\\com\\hdxinfo\\data\\时刻表数据_0608.txt");
+		network.loadLineTrainLimit(dataPath+ "\\WEB-INF\\classes\\com\\hdxinfo\\data\\列车定员_0608.txt");
 
 		try {
 			LoadTarget_lineInfo(dataPath+ "\\WEB-INF\\classes\\com\\hdxinfo\\data\\target_mainline", network);
@@ -104,7 +104,7 @@ public class InitializationServlet extends HttpServlet {
 		
 		RouteSearchService.find = find;
 		
-		File file = new File(dataPath+ "\\WEB-INF\\classes\\com\\hdxinfo\\data\\Stations_0306.txt");
+		File file = new File(dataPath+ "\\WEB-INF\\classes\\com\\hdxinfo\\data\\Stations_0608.txt");
 		
 		RouteSearchService.obj = initStationName(file);
 		
@@ -251,12 +251,13 @@ public class InitializationServlet extends HttpServlet {
 	    	br.readLine();
 			br.readLine();
 			String str;
+			int m =0;
 			while ((str=br.readLine())!=null) {
 				
 				
 				
 				String[] stationData = str.split("\t");
-				
+				m++;
 				String lineNumStr = stationData[0];
 				String stationName = stationData[3];
 				

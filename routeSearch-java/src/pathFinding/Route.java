@@ -30,6 +30,9 @@ public class Route  implements Cloneable{
     //存放路径满意度指数
 //    public double costSatisfaction[][]=new double[3][24*12];
     public double costSatisfaction[][];
+    
+    
+    public double runSat[][];
 //    public double costSatisfaction_in[]=new double[24*12];
 //    public double costSatisfaction_tran[]=new double[24*12];
 //    public double costSatisfaction_con[]=new double[24*12];
